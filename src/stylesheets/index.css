@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans+Condensed:wght@300&family=Oswald&family=Titillium+Web:wght@300&family=Zen+Kurenaido&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Ubuntu:700');
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@200&display=swap');
+
+* {
+    box-sizing: border-box;
+    border: 0;
+    font-family: 'Ubuntu';
+    font-size: 100%;
+    font-style: inherit;
+    font-weight: inherit;
+    margin: 0;
+    outline: 0;
+    padding: 0;
+    vertical-align: baseline;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none
+}
+
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box
+}
+
+*:before,
+*:after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box
+}
+
+*,
+html,
+body {
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    padding: 0;
+    margin: 0 auto;
+    background-color: black;
+    color: var(--light);
+    user-select: none;
+    box-sizing: border-box;
+    font-family: 'Ubuntu';
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+#bgcanvasd,
+#bgcanvasw,
+#canvas {
+    left: 0;
+    position: absolute;
+    right: 0;
+    bottom: 0
+}
+  
+:root {
+    --color: #dcddde;
+    --background-color: #36393f;
+    --discord-color: #5865F2;
+}
