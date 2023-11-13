@@ -2,7 +2,7 @@ import React from 'react'
 import $ from 'jquery'
 import 'material-icons/iconfont/material-icons.css'
 
-import { CreateWagerRoom, closeWager, wagerCloseRoom, wagerJoinRoom } from '../../Core/Wager/wager'
+import { CreateWagerRoom, closeWager, wagerCloseRoom, wagerJoinRoom } from '../../Core/Game/wager'
 
 
 function Wager() {

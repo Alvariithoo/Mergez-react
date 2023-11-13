@@ -1,6 +1,6 @@
 import { Graphics, Loader, utils } from 'pixi.js'
 import Logger from '../Network/Logger'
-import { Stats } from '../World'
+import { Stats } from '../Menu/Stats'
 import { Mergez } from '..'
 
 class Textures {

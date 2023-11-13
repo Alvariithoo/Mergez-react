@@ -9,7 +9,6 @@ import Writer from '../../Core/Network/Writer'
 import Network from '../../Core/Network'
 
 import Functions from '../../Core/Game/Functions'
-import Constant from '../../Core/Game/Variable'
 import noSkin from '../../../img/noskin.png'
 
 function MainPanel() {

@@ -1,36 +1,57 @@
-import { Cells, Stats } from "../World"
-import PlayerCamera from '../Player/Camera'
-import Constant from "./Variable"
 import Functions from "./Functions"
-
+import { Mergez } from ".."
+import Cell from "../Player/Cell"
+import { Stats } from "../Menu/Stats"
 
 export class Camera {
+
+    static get = {
+        x: 0,
+        y: 0,
+        nx: 0,
+        ny: 0,
+        target: {
+            x: 0,
+            y: 0,
+            scale: 1
+        },
+        viewportScale: 1,
+        userZoom: 1,
+        sizeScale: 1,
+        scale: 1,
+        updated: 0,
+        oldPos: {
+            x: 0,
+            y: 0
+        }
+    }
+
     static toCamera(obj) {
-        obj.pivot.set(PlayerCamera.camera.x, PlayerCamera.camera.y)
+        obj.pivot.set(Camera.get.x, Camera.get.y)
         this.scaleForth(obj)
         obj.position.set(window.innerWidth / 2, window.innerHeight / 2)
     }
 
     static scaleForth(obj) {
-        obj.scale.set(1 / PlayerCamera.camera.scale)
+        obj.scale.set(1 / Camera.get.scale)
     }
 
     static scaleBack(obj) {
-        obj.scale.set(PlayerCamera.camera.scale)
+        obj.scale.set(Camera.get.scale)
     }
     
     static fromCamera(obj) {
-        obj.position.set(PlayerCamera.camera.x, PlayerCamera.camera.y)
+        obj.position.set(Camera.get.x, Camera.get.y)
         this.scaleBack(obj)
         obj.position.set(window.innerWidth / 2, window.innerHeight / 2)
     }
 
     static cameraUpdate() {
         const syncAppStamp = Date.now()
-        const dt = Math.max(Math.min((syncAppStamp - PlayerCamera.camera.updated) / 40, 1), 0)
+        const dt = Math.max(Math.min((syncAppStamp - Camera.get.updated) / 40, 1), 0)
         const myCells = []
-        for (const id of Cells.cells.mine) {
-            const cell = Cells.cells.byId[id]
+        for (const id of Cell.get.mine) {
+            const cell = Cell.get.byId[id]
             if (cell) myCells.push(cell)
         }
         if (myCells.length > 0) {
@@ -45,38 +66,38 @@ export class Camera {
                 // eslint-disable-next-line no-unused-vars
                 s += cell.s
             }
-            PlayerCamera.camera.target.x = x / myCells.length
-            PlayerCamera.camera.target.y = y / myCells.length
-            PlayerCamera.camera.sizeScale = 1 // Math.pow(Math.min(64 / s, 1), 0.4)
-            PlayerCamera.camera.target.scale = PlayerCamera.camera.sizeScale
-            PlayerCamera.camera.target.scale *= PlayerCamera.camera.viewportScale * PlayerCamera.camera.userZoom
-            PlayerCamera.camera.nx = (PlayerCamera.camera.target.x + PlayerCamera.camera.x) / 2
-            PlayerCamera.camera.ny = (PlayerCamera.camera.target.y + PlayerCamera.camera.y) / 2
-            Stats.stats.score = score
+            Camera.get.target.x = x / myCells.length
+            Camera.get.target.y = y / myCells.length
+            Camera.get.sizeScale = 1 // Math.pow(Math.min(64 / s, 1), 0.4)
+            Camera.get.target.scale = Camera.get.sizeScale
+            Camera.get.target.scale *= Camera.get.viewportScale * Camera.get.userZoom
+            Camera.get.nx = (Camera.get.target.x + Camera.get.x) / 2
+            Camera.get.ny = (Camera.get.target.y + Camera.get.y) / 2
+            Stats.get.score = score
         } else {
-            Stats.stats.score = NaN
-            PlayerCamera.camera.nx += (PlayerCamera.camera.target.x - PlayerCamera.camera.x) / 20
-            PlayerCamera.camera.ny += (PlayerCamera.camera.target.y - PlayerCamera.camera.y) / 20
+            Stats.get.score = NaN
+            Camera.get.nx += (Camera.get.target.x - Camera.get.x) / 20
+            Camera.get.ny += (Camera.get.target.y - Camera.get.y) / 20
         }
-        PlayerCamera.camera.scale += (PlayerCamera.camera.target.scale - PlayerCamera.camera.scale) / 9
+        Camera.get.scale += (Camera.get.target.scale - Camera.get.scale) / 9
     
-        PlayerCamera.camera.x = PlayerCamera.camera.oldPos.x + (PlayerCamera.camera.nx - PlayerCamera.camera.oldPos.x) * dt
-        PlayerCamera.camera.y = PlayerCamera.camera.oldPos.y + (PlayerCamera.camera.ny - PlayerCamera.camera.oldPos.y) * dt
+        Camera.get.x = Camera.get.oldPos.x + (Camera.get.nx - Camera.get.oldPos.x) * dt
+        Camera.get.y = Camera.get.oldPos.y + (Camera.get.ny - Camera.get.oldPos.y) * dt
     
-        PlayerCamera.camera.oldPos.x = PlayerCamera.camera.x
-        PlayerCamera.camera.oldPos.y = PlayerCamera.camera.y
+        Camera.get.oldPos.x = Camera.get.x
+        Camera.get.oldPos.y = Camera.get.y
     
-        this.toCamera(Constant.cellContainer)
-        this.fromCamera(Constant.cellContainer)
-        this.toCamera(Constant.bgContainer)
-        this.fromCamera(Constant.bgContainer)
-        PlayerCamera.camera.updated = Date.now()
+        this.toCamera(Mergez.cellContainer)
+        this.fromCamera(Mergez.cellContainer)
+        this.toCamera(Mergez.bgContainer)
+        this.fromCamera(Mergez.bgContainer)
+        Camera.get.updated = Date.now()
     }
 
     static handleScroll(event) {
         if (event.target !== Functions.byId('overlays2')) return
-        PlayerCamera.camera.userZoom *= event.deltaY > 0 ? 0.8 : 1.2
-        PlayerCamera.camera.userZoom = Math.max(PlayerCamera.camera.userZoom, .01)
-        PlayerCamera.camera.userZoom = Math.min(PlayerCamera.camera.userZoom, 4)
+        Camera.get.userZoom *= event.deltaY > 0 ? 0.8 : 1.2
+        Camera.get.userZoom = Math.max(Camera.get.userZoom, .01)
+        Camera.get.userZoom = Math.min(Camera.get.userZoom, 4)
     }
 }

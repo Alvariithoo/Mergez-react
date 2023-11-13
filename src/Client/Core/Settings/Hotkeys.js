@@ -1,7 +1,7 @@
 
 
 import $ from 'jquery'
-import Constant from '../Game/Variable'
+import { Mergez } from '..'
 import Functions from '../Game/Functions'
 import Network from '../Network'
 import Settings from '.'
@@ -197,11 +197,11 @@ class Keysbind {
             Keysbind.getWagerPanel(event)
             if (Settings.ingame.escOverlayShown || !Settings.list.showChat) return
             if (Settings.ingame.isTyping) {
-                Constant.chatBox.blur()
-                if (Constant.chatBox.value.length > 0) Functions.sendChat(Constant.chatBox.value)
-                Constant.chatBox.value = ''
+                Mergez.chatBox.blur()
+                if (Mergez.chatBox.value.length > 0) Functions.sendChat(Mergez.chatBox.value)
+                Mergez.chatBox.value = ''
             } else {
-                Constant.chatBox.focus()
+                Mergez.chatBox.focus()
             }
         }
     }
@@ -335,8 +335,7 @@ class Keysbind {
     }
 
     static setUpHotKeyConfigPage() {
-        var body
-        body = $('<div id="hotkeys_setting" class="modal fade" role="dialog"/>').append(Keysbind.getHotkeyDivHtml())
+        var body = $('<div id="hotkeys_setting" class="modal fade" role="dialog"/>').append(Keysbind.getHotkeyDivHtml())
         $("#KeysContainerBinds").append(body)
         $("#hotkey_setting").insertAfter("#modal-content")
         $(document).on("hide.bs.modal", "#hotkeys_setting", function () {

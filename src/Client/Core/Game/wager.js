@@ -1,7 +1,7 @@
 import $ from 'jquery'
 import Logger from '../Network/Logger'
 import Settings from '../Settings'
-import Functions from '../Game/Functions'
+import Functions from './Functions'
 import Network from '../Network'
 
 export const wager = () => {

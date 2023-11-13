@@ -1,18 +1,19 @@
 import { Application, Container, BitmapFont } from 'pixi.js'
 import $ from 'jquery'
 
-import { Cells, Chat, Minimap } from './World'
+import { Minimap } from './World'
+
+import { Chat } from './Menu/Chat'
 
 import Logger from './Network/Logger'
 import Network from './Network'
 
-import PlayerCamera from './Player/Camera'
-import Textures from './Player/Sprite'
+import Textures from './Player/Textures'
 
 import Settings from './Settings'
 import Keysbind from './Settings/Hotkeys'
 
-import Constant from './Game/Variable'
+import Cell from './Player/Cell'
 import { Camera } from './Game/Camera'
 import Functions from './Game/Functions'
 
@@ -40,6 +41,13 @@ export class Mergez {
     static view = null
     static application = null
 
+    static chatBox = null
+    static chatArea = null
+    static chatRoom = null
+
+    static bgContainer = null
+    static cellContainer = null
+
     static init() {
         Mergez.view = document.getElementById('canvas')
         Mergez.application = new Application({
@@ -51,20 +59,20 @@ export class Mergez {
             resolution: 1
         })
 
-        Constant.bgContainer = new Container()
-        Constant.bgContainer.sortableChildren = true
-        Constant.cellContainer = new Container()
-        Constant.cellContainer.sortableChildren = true
+        Mergez.bgContainer = new Container()
+        Mergez.bgContainer.sortableChildren = true
+        Mergez.cellContainer = new Container()
+        Mergez.cellContainer.sortableChildren = true
 
-        Mergez.application.stage.addChild(Constant.bgContainer)
-        Mergez.application.stage.addChild(Constant.cellContainer)
-        Mergez.application.stage.addChild(Constant.mapsquare)
-        Mergez.application.stage.addChild(Constant.mapsector)
-        Mergez.application.stage.addChild(Constant.mapplayer)
+        Mergez.application.stage.addChild(Mergez.bgContainer)
+        Mergez.application.stage.addChild(Mergez.cellContainer)
+        Mergez.application.stage.addChild(Minimap.mapsquare)
+        Mergez.application.stage.addChild(Minimap.mapsector)
+        Mergez.application.stage.addChild(Minimap.mapplayer)
 
-        Constant.chatRoom = Functions.byId('chatroom')
-        Constant.chatArea = Functions.byId('chatboxArea2')
-        Constant.chatBox = Functions.byId('input_box2')
+        Mergez.chatRoom = Functions.byId('chatroom')
+        Mergez.chatArea = Functions.byId('chatboxArea2')
+        Mergez.chatBox = Functions.byId('input_box2')
 
         Settings.afterGameLogicLoaded()
         Settings.loadSettings()
@@ -82,11 +90,11 @@ export class Mergez {
             Settings.ingame.mouseY = event.clientY
         })
 
-        Constant.chatBox.onblur = () => {
+        Mergez.chatBox.onblur = () => {
             Settings.ingame.isTyping = false
             Chat.drawChat()
         }
-        Constant.chatBox.onfocus = () => {
+        Mergez.chatBox.onfocus = () => {
             Settings.ingame.isTyping = true
             Chat.drawChat()
         }
@@ -95,9 +103,9 @@ export class Mergez {
             let myCells = []
             let x = 0
             let y = 0
-            for (let i = 0; i < Cells.cells.mine.length; i++) {
-                if (Cells.cells.byId.hasOwnProperty(Cells.cells.mine[i])) {
-                    myCells.push(Cells.cells.byId[Cells.cells.mine[i]])
+            for (let i = 0; i < Cell.get.mine.length; i++) {
+                if (Cell.get.byId.hasOwnProperty(Cell.get.mine[i])) {
+                    myCells.push(Cell.get.byId[Cell.get.mine[i]])
                 }
             }
 
@@ -112,8 +120,8 @@ export class Mergez {
             y /= myCells.length
 
             Functions.sendMouseMove(
-                (Settings.ingame.mouseX - window.innerWidth / 2) / PlayerCamera.camera.scale + PlayerCamera.camera.x,
-                (Settings.ingame.mouseY - window.innerHeight / 2) / PlayerCamera.camera.scale + PlayerCamera.camera.y
+                (Settings.ingame.mouseX - window.innerWidth / 2) / Camera.get.scale + Camera.get.x,
+                (Settings.ingame.mouseY - window.innerHeight / 2) / Camera.get.scale + Camera.get.y
             )
         }, 40)
         
@@ -142,7 +150,7 @@ export class Mergez {
     static onresize = () => {
         const width = window.innerWidth
         const height = window.innerHeight
-        PlayerCamera.camera.viewportScale = Math.max(width / width, height / height)
+        Camera.get.viewportScale = Math.max(width / width, height / height)
         Mergez.application.renderer.resize(width, height)
         Minimap.clearSquare()
     }

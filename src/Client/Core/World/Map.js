@@ -1,6 +1,5 @@
 import { Container, TilingSprite, utils, Graphics } from 'pixi.js'
-import Constant from '../Game/Variable'
-
+import { Mergez } from '..'
 export class drawMap {
     static border = Object.create({
         left: -2000,
@@ -32,7 +31,7 @@ export class drawMap {
         if (drawMap.border.centerX !== 0 || drawMap.border.centerY !== 0) return
         this.container.addChild(this.background)
         this.container.addChild(this.borderGraphics)
-        Constant.bgContainer.addChild(this.container)
+        Mergez.bgContainer.addChild(this.container)
     }
     redraw() {
         if (drawMap.border.centerX !== 0 || drawMap.border.centerY !== 0) return

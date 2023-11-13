@@ -1,5 +1,5 @@
 import React from 'react'
-import { wager } from '../../Core/Wager/wager'
+import { wager } from '../../Core/Game/wager'
 
 import $ from 'jquery'
 import Network from '../../Core/Network'

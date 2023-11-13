@@ -1,6 +1,5 @@
 import $ from 'jquery'
 
-import Constant from '../Game/Variable'
 import Functions from '../Game/Functions'
 
 import Logger from './Logger'
@@ -11,10 +10,16 @@ import { Player } from '../Player'
 
 import Color from '../Player/Color'
 import Cell from '../Player/Cell'
-import { Camera } from '../Game/Camera'
-import PlayerCamera from '../Player/Camera'
 
-import { Cells, drawMap, Leaderboard, Chat, Stats } from '../World'
+import { Camera } from '../Game/Camera'
+
+import { drawMap, Minimap } from '../World'
+
+import { Chat } from '../Menu/Chat'
+import { Stats } from '../Menu/Stats'
+import { Leaderboard } from '../Menu/Leaderboard'
+
+import { Mergez } from '..'
 
 
 class Network {
@@ -44,18 +49,18 @@ class Network {
     }
 
     static gameReset() {
-        Functions.cleanupObject(Cells.cells)
+        Functions.cleanupObject(Cell.get)
         Functions.cleanupObject(drawMap.border)
-        Functions.cleanupObject(Leaderboard.leaderboard)
-        Functions.cleanupObject(Chat.chat)
+        Functions.cleanupObject(Leaderboard.get)
+        Functions.cleanupObject(Chat.get)
         Functions.cleanupObject(Stats.stats)
-        Chat.chat.messages = []
-        Leaderboard.leaderboard.items = []
-        Cells.cells.mine = []
-        Cells.cells.byId = new Map()
-        Cells.cells.list = []
-        PlayerCamera.camera.x = PlayerCamera.camera.y = PlayerCamera.camera.target.x = PlayerCamera.camera.target.y = 0
-        PlayerCamera.camera.scale = PlayerCamera.camera.target.scale = 1
+        Chat.get.messages = []
+        Leaderboard.get.items = []
+        Cell.get.mine = []
+        Cell.get.byId = new Map()
+        Cell.get.list = []
+        Camera.get.x = Camera.get.y = Camera.get.target.x = Camera.get.target.y = 0
+        Camera.get.scale = Camera.get.target.scale = 1
         Settings.ingame.mapCenterSet = false
     }
 
@@ -67,8 +72,8 @@ class Network {
         this.ws.onmessage = null
         this.ws.close()
         this.ws = null
-        while (Constant.cellContainer.children[0]) {
-            Constant.cellContainer.removeChild(Constant.cellContainer.children[0])
+        while (Mergez.cellContainer.children[0]) {
+            Mergez.cellContainer.removeChild(Mergez.cellContainer.children[0])
         }
     }
 
@@ -79,7 +84,7 @@ class Network {
         }
         $('#connecting').show()
         this.wsUrl = url
-        this.ws = new WebSocket(`ws${Constant.USE_HTTPS ? 's' : ''}://${url}`)
+        this.ws = new WebSocket(`ws${this.USE_HTTPS ? 's' : ''}://${url}`)
         this.ws.binaryType = 'arraybuffer'
         this.ws.onopen = this.wsOpen
         this.ws.onmessage = this.wsMessage
@@ -126,9 +131,9 @@ class Network {
                 for (let i = 0; i < count; i++) {
                     killer = reader.getUint32()
                     killed = reader.getUint32()
-                    if (!Cells.cells.byId.hasOwnProperty(killer) || !Cells.cells.byId.hasOwnProperty(killed))
+                    if (!Cell.get.byId.hasOwnProperty(killer) || !Cell.get.byId.hasOwnProperty(killed))
                         continue
-                    Cells.cells.byId[killed].destroy(killer)
+                    Cell.get.byId[killed].destroy(killer)
                 }
                 // update records
                 while (true) {
@@ -152,8 +157,8 @@ class Network {
                     const skin = flags.updSkin ? reader.getStringUTF8() : null
                     const name = flags.updName ? reader.getStringUTF8() : null
     
-                    if (Cells.cells.byId.hasOwnProperty(id)) {
-                        const cell = Cells.cells.byId[id]
+                    if (Cell.get.byId.hasOwnProperty(id)) {
+                        const cell = Cell.get.byId[id]
                         cell.update(syncUpdStamp)
                         cell.updated = syncUpdStamp
                         cell.ox = cell.x
@@ -167,34 +172,34 @@ class Network {
                         if (skin) cell.setSkin(skin)
                     } else {
                         const cell = new Cell(id, x, y, s, name, color, skin, flags)
-                        Cells.cells.byId[id] = cell
-                        Cells.cells.list.push(cell)
+                        Cell.get.byId[id] = cell
+                        Cell.get.list.push(cell)
                     }
                 }
                 // dissapear records
                 count = reader.getUint16()
                 for (let i = 0; i < count; i++) {
                     killed = reader.getUint32()
-                    if (Cells.cells.byId.hasOwnProperty(killed) && !Cells.cells.byId[killed].destroyed)
-                        Cells.cells.byId[killed].destroy(null)
+                    if (Cell.get.byId.hasOwnProperty(killed) && !Cell.get.byId[killed].destroyed)
+                        Cell.get.byId[killed].destroy(null)
                 }
                 break
             }
             case 0x11: { // update pos
-                PlayerCamera.camera.target.x = reader.getFloat32()
-                PlayerCamera.camera.target.y = reader.getFloat32()
-                PlayerCamera.camera.target.scale = reader.getFloat32()
-                PlayerCamera.camera.target.scale *= PlayerCamera.camera.viewportScale
-                PlayerCamera.camera.target.scale *= PlayerCamera.camera.userZoom
+                Camera.get.target.x = reader.getFloat32()
+                Camera.get.target.y = reader.getFloat32()
+                Camera.get.target.scale = reader.getFloat32()
+                Camera.get.target.scale *= Camera.get.viewportScale
+                Camera.get.target.scale *= Camera.get.userZoom
                 break
             }
             case 0x12: { // clear all
-                for (let i in Cells.cells.byId)
-                    Cells.cells.byId[i].destroy(null)
+                for (let i in Cell.get.byId)
+                    Cell.get.byId[i].destroy(null)
                 break
             }
             case 0x14: { // clear my cells
-                Cells.cells.mine = []
+                Cell.get.mine = []
                 break
             }
             case 0x15: { // draw line
@@ -202,29 +207,29 @@ class Network {
                 break
             }
             case 0x20: { // new cell
-                Cells.cells.mine.push(reader.getUint32())
+                Cell.get.mine.push(reader.getUint32())
                 break
             }
             case 0x30: { // text list
-                Leaderboard.leaderboard.items = []
-                Leaderboard.leaderboard.type = 'text'
+                Leaderboard.get.items = []
+                Leaderboard.get.type = 'text'
     
                 const lbCount = reader.getUint32()
                 for (let i = 0; i < lbCount; ++i) {
-                    Leaderboard.leaderboard.items.push(reader.getStringUTF8())
+                    Leaderboard.get.items.push(reader.getStringUTF8())
                 }
                 Leaderboard.drawLeaderboard()
                 break
             }
             case 0x31: { // ffa list
-                Leaderboard.leaderboard.items = []
-                Leaderboard.leaderboard.type = 'ffa'
+                Leaderboard.get.items = []
+                Leaderboard.get.type = 'ffa'
     
                 const count = reader.getUint32()
                 for (let i = 0; i < count; ++i) {
                     const isMe = !!reader.getUint32()
                     const lbName = reader.getStringUTF8()
-                    Leaderboard.leaderboard.items.push({
+                    Leaderboard.get.items.push({
                         me: isMe,
                         name: Cell.parseName(lbName).name || Cell.EMPTY_NAME
                     })
@@ -233,12 +238,12 @@ class Network {
                 break
             }
             case 0x32: { // pie chart
-                Leaderboard.leaderboard.items = []
-                Leaderboard.leaderboard.type = 'pie'
+                Leaderboard.get.items = []
+                Leaderboard.get.type = 'pie'
     
                 const teamsCount = reader.getUint32()
                 for (let i = 0; i < teamsCount; ++i) {
-                    Leaderboard.leaderboard.items.push(reader.getFloat32())
+                    Leaderboard.get.items.push(reader.getFloat32())
                 }
                 Leaderboard.drawLeaderboard()
                 break
@@ -256,15 +261,15 @@ class Network {
                 if (data.data.byteLength === 33) break
                 if (!Settings.ingame.mapCenterSet) {
                     Settings.ingame.mapCenterSet = true
-                    PlayerCamera.camera.x = PlayerCamera.camera.target.x = drawMap.border.centerX
-                    PlayerCamera.camera.y = PlayerCamera.camera.target.y = drawMap.border.centerY
-                    PlayerCamera.camera.scale = PlayerCamera.camera.target.scale = 1
+                    Camera.get.x = Camera.get.target.x = drawMap.border.centerX
+                    Camera.get.y = Camera.get.target.y = drawMap.border.centerY
+                    Camera.get.scale = Camera.get.target.scale = 1
                 }
                 // reader.getUint32() // game type
-                // if (!/MultiOgar|OgarII/.test(reader.getStringUTF8()) || Stats.stats.pingLoopId) break
-                Stats.stats.pingLoopId = setInterval(() => {
+                // if (!/MultiOgar|OgarII/.test(reader.getStringUTF8()) || Stats.get.pingLoopId) break
+                Stats.get.pingLoopId = setInterval(() => {
                     Network.wsSend(Network.UINT8_CACHE[254])
-                    Stats.stats.pingLoopStamp = Date.now()
+                    Stats.get.pingLoopStamp = Date.now()
                 }, 2000)
                 break
             }
@@ -297,7 +302,7 @@ class Network {
                 const seconds = date.getSeconds().toString().padStart(2, '0')
                 const time = `${hours}:${minutes}:${seconds}`
     
-                Chat.chat.messages.push({
+                Chat.get.messages.push({
                     time: time,
                     name,
                     message,
@@ -316,21 +321,24 @@ class Network {
     }
 
     static drawGame() {
-        const now = Date.now()
-        Stats.stats.fps += (1000 / Math.max(Date.now() - now, 1) - Stats.stats.fps) / 10
+        const now = Date.now();
+        const elapsed = now - Stats.get.lastFrameTime
+        Stats.get.fps = 1000 / Math.max(elapsed, 1)
+        Stats.get.lastFrameTime = now
+
         if (Settings.list.showMinimap) {
-            Constant.mapsector.alpha = 1
-            Constant.mapsquare.alpha = 1
-            Constant.mapplayer.alpha = 1
+            Minimap.mapsector.alpha = 1
+            Minimap.mapsquare.alpha = 1
+            Minimap.mapplayer.alpha = 1
         } else {
-            Constant.mapsector.alpha = 0
-            Constant.mapsquare.alpha = 0
-            Constant.mapplayer.alpha = 0
+            Minimap.mapsector.alpha = 0
+            Minimap.mapsquare.alpha = 0
+            Minimap.mapplayer.alpha = 0
         }
         Settings.list.fancyGrid = false //?
-        for (const cell of Cells.cells.list) cell.update(now)
+        for (const cell of Cell.get.list) cell.update(now)
         Camera.cameraUpdate()
-        for (const cell of Cells.cells.list) cell.updatePlayerPosition()
+        for (const cell of Cell.get.list) cell.updatePlayerPosition()
         Player.clearPlayers()
         Functions.drawGrid()
         

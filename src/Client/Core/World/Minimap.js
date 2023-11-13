@@ -1,15 +1,21 @@
+import { Graphics, Container } from 'pixi.js'
 
-import Constant from '../Game/Variable'
 import { drawMap } from './Map'
-import PlayerCamera from '../Player/Camera'
 import { Mergez } from '..'
+import { Camera } from '../Game/Camera'
 
 export class Minimap {
 
+    static mapsquare = new Container()
+    static mapsector = new Container()
+    static mapplayer = new Container()
+    static drawpl = new Graphics()
+    static square = new Graphics()
+    
     static clearSquare() {
-        Constant.square.clear()
-        while (Constant.mapsector.children[0]) {
-            Constant.mapsector.removeChild(Constant.mapsector.children[0])
+        Minimap.square.clear()
+        while (Minimap.mapsector.children[0]) {
+            Minimap.mapsector.removeChild(Minimap.mapsector.children[0])
         }
         this.drawSquare()
     }
@@ -17,14 +23,14 @@ export class Minimap {
     static drawSquare() {
         const targetSize = 200
         const borderAR = drawMap.border.width / drawMap.border.height // aspect ratio
-        const width = targetSize * borderAR * PlayerCamera.camera.viewportScale
-        const height = targetSize / borderAR * PlayerCamera.camera.viewportScale
+        const width = targetSize * borderAR * Camera.get.viewportScale
+        const height = targetSize / borderAR * Camera.get.viewportScale
         const beginX = Mergez.view.width - width - 5
         const beginY = Mergez.view.height - height - 5
     
-        Constant.square.beginFill(0x000000)
-        Constant.square.drawRect(beginX, beginY, width, height)
-        Constant.square.alpha = 0.4
-        Constant.mapsquare.addChild(Constant.square)
+        Minimap.square.beginFill(0x000000)
+        Minimap.square.drawRect(beginX, beginY, width, height)
+        Minimap.square.alpha = 0.4
+        Minimap.mapsquare.addChild(Minimap.square)
     }
 }

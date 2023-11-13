@@ -1,7 +1,7 @@
 import $ from 'jquery'
 
 export class Chat {
-    static chat = Object.create({
+    static get = Object.create({
         messages: [],
         waitUntil: 0,
         canvas: document.createElement('canvas'),

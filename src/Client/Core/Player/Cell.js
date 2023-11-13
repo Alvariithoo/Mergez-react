@@ -1,14 +1,19 @@
 import { Container, Graphics, Texture, Sprite, BitmapText, Text, BaseTexture } from 'pixi.js'
-import Constant from '../Game/Variable'
 import Logger from '../Network/Logger'
 import Settings from '../Settings'
-import { Cells } from '../World'
 import Functions from '../Game/Functions'
-import PlayerCamera from './Camera'
-import Textures from './Sprite'
+import Textures from './Textures'
 import { Mergez } from '..'
+import { Camera } from '../Game/Camera'
 
 class Cell {
+
+    static get = {
+        mine: [],
+        byId: new Map(),
+        list: [],
+    }
+
     static parseName(value) { // static method
         let [, skin, name ] = /^(?:<([^}]*)>)?([^]*)/.exec(value || '')
         name = name.trim()
@@ -57,8 +62,8 @@ class Cell {
         this.drawSprite()
     }
     destroy(killerId) {
-        delete Cells.cells.byId[this.id]
-        if (Cells.cells.mine.remove(this.id) && Cells.cells.mine.length === 0) ( Functions.showESCOverlay() && console.log("death") )
+        delete Cell.get.byId[this.id]
+        if (Cell.get.mine.remove(this.id) && Cell.get.mine.length === 0) ( Functions.showESCOverlay() && console.log("death") )
         this.destroyed = true
         this.dead = this.syncUpdStamp
         if (killerId && !this.diedBy) {
@@ -67,18 +72,18 @@ class Cell {
         }
     }
     update(relativeTime) {
-        if (Cells.cells.mine.length !== 0)
+        if (Cell.get.mine.length !== 0)
         var dt = Math.max(Math.min((relativeTime - this.updated) / Settings.list.animationDelay, 1), 0)
         if (this.destroyed && Date.now() > this.dead + 240) {
-            Cells.cells.list.remove(this)
+            Cell.get.list.remove(this)
             if (this.massContainer) {
                 this.entity.destroy()
                 this.massContainer.destroy()
             } else {
                 this.entity.destroy()
             }
-        } else if (this.diedBy && Cells.cells.byId.hasOwnProperty(this.diedBy)) {
-            const { x, y } = Cells.cells.byId[this.diedBy]
+        } else if (this.diedBy && Cell.get.byId.hasOwnProperty(this.diedBy)) {
+            const { x, y } = Cell.get.byId[this.diedBy]
             this.nx = x
             this.ny = y
         }
@@ -96,7 +101,7 @@ class Cell {
         if (this.skinSprite) Settings.list.showSkins ? this.reDraw() : this.reDraw()
         if (this.nameSprite) {
             this.nameSprite.scale.set(this.s / 200, this.s / 200)
-            this.nameSprite.alpha = Settings.list.showNames && (this.s * PlayerCamera.camera.scale > 30 && this.jagged !== true) ? 1 : 0
+            this.nameSprite.alpha = Settings.list.showNames && (this.s * Camera.get.scale > 30 && this.jagged !== true) ? 1 : 0
         }
         if (this.massSprite) {
             if (Settings.list.showMass) {
@@ -105,7 +110,7 @@ class Cell {
                 let y = Math.max(this.s / 2.4, this.nameSize / 1)
                 this.massSprite.scale.set(this.s / 200, this.s / 200)
                 this.massSprite.y = y
-                this.massSprite.alpha = (this.s * PlayerCamera.camera.scale > 30 && this.jagged !== true) ? 1 : 0
+                this.massSprite.alpha = (this.s * Camera.get.scale > 30 && this.jagged !== true) ? 1 : 0
                 this.entity.addChild(this.massSprite)
             } else {
                 this.massSprite.scale.set(this.s / 200, this.s / 200)
@@ -159,7 +164,7 @@ class Cell {
         }
         this.entity.position.x = this.x
         this.entity.position.y = this.y
-        Constant.cellContainer.addChild(this.entity)
+        Mergez.cellContainer.addChild(this.entity)
     }
     drawCell() {
         let texture

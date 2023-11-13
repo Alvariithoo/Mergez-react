@@ -1,7 +1,6 @@
 
 import $ from 'jquery'
 import Writer from '../Network/Writer'
-import Constant from './Variable'
 import Settings from '../Settings'
 import Network from '../Network'
 import { drawMap } from '../World'
@@ -78,11 +77,8 @@ class Functions {
         if (Settings.list.fancyGrid === true) return
         Settings.list.fancyGrid = true
         
-        if (Constant.drawMapInstance) {
-            Constant.drawMapInstance.container.destroy()
-        }
-        
-        Constant.drawMapInstance = new drawMap(Mergez.application)
+        if (window.drawMapInstance) window.drawMapInstance.container.destroy()
+        window.drawMapInstance = new drawMap(Mergez.application)
     }
 }
 
