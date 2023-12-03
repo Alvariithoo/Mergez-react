@@ -13,10 +13,6 @@ function Keybinds() {
         console.log("button reset")
         Keysbind.resetDefaultHotkey()
     }
-
-    function save() {
-        Keysbind.saveHotkeys()
-    }
     
     return (
         <>
@@ -42,32 +38,7 @@ function Keybinds() {
                                         <p id="ins-text">Allowed hotkey combinations:</p>
                                         <p id="ins-text">[CTRL] + [ALT] + 0-9, a-z, [TAB], [ENTER]</p>
                                         <br /><hr id="server-hr" /><br />
-                                        <div id="mouse-reqs">
-                                            <span>Left Mouse</span>
-                                            <select id="leftMouse mouse-select">
-                                                <option disabled="">Left Mouse</option>
-                                                <option id="leftMouseDefault">None</option>
-                                                <option value="Feed">Macro Feed</option>
-                                                <option value="Split16">Quad Split</option>
-                                                <option value="Split8">Triple Split</option>
-                                                <option value="Split4">Double Split</option>
-                                                <option value="Split">Split</option>
-                                            </select>
-                                        </div>
-                                        <div id="mouse-reqs">
-                                            <span>Right Mouse</span>
-                                            <select id="rightMouse mouse-select">
-                                                <option disabled="">Right Mouse</option>
-                                                <option id="rightMouseDefault">None</option>
-                                                <option value="Feed">Macro Feed</option>
-                                                <option value="Split16">Quad Split</option>
-                                                <option value="Split8">Triple Split</option>
-                                                <option value="Split4">Double Split</option>
-                                                <option value="Split">Split</option>
-                                            </select>
-                                        </div>
                                         <button id="reset" onClick={reseting}>Reset</button>
-                                        <button id="save" onClick={save}>Save</button>
                                     </div>
                                 </div>
                             </div>

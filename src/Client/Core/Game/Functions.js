@@ -38,24 +38,6 @@ class Functions {
         return document.getElementById(id)
     }
 
-    static isValidHotKey(event) {
-        return (
-            (48 <= event.keyCode && event.keyCode <= 57) || // Numbers 0-9
-            (65 <= event.keyCode && event.keyCode <= 90) || // Uppercase letters A-Z
-            event.keyCode === 9 || // Tab key
-            event.keyCode === 13 || // Enter key
-            event.keyCode === 27 ||  // ESC key
-            event.keyCode === 32 // SPACE
-        )
-    }
-
-    static processKey(event) {
-        let IE_KEYS = {}
-        let key = this.isValidHotKey(event.code) || event.key.toLowerCase()
-        if (Object.hasOwnProperty.call(IE_KEYS, key)) key = IE_KEYS[key] // IE fix
-        return key
-    }
-
     static sendMouseMove(x, y) {
         const writer = new Writer(true)
         writer.setUint8(0x10)

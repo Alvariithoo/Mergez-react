@@ -23,18 +23,6 @@ Array.prototype.remove = function (a) {
     return i !== -1 && this.splice(i, 1)
 }
 
-Element.prototype.hide = function () {
-    this.style.display = 'none'
-    if (this.style.opacity === 1) this.style.opacity = 0
-}
-
-Element.prototype.show = function (seconds) {
-    this.style.display = ''
-    if (!seconds) return
-    this.style.transition = `opacity ${seconds}s ease 0s`
-    this.style.opacity = 1
-}
-
 export class Mergez {
 
     static LOAD_START = Date.now()
@@ -123,9 +111,10 @@ export class Mergez {
                 (Settings.ingame.mouseX - window.innerWidth / 2) / Camera.get.scale + Camera.get.x,
                 (Settings.ingame.mouseY - window.innerHeight / 2) / Camera.get.scale + Camera.get.y
             )
+
+            Mergez.onresize()
         }, 40)
         
-        Mergez.onresize()
         Mergez.mainLoader()
 
         Network.gameReset()

@@ -6,105 +6,6 @@ import Functions from '../Game/Functions'
 import Network from '../Network'
 import Settings from '.'
 
-$("#overlays2").on("mousedown", (event) => {
-    if (event.button === 0) {
-        switch ($("#leftMouse").val()) {
-            case "Feed":
-                this.isPressed = true
-                break
-            case "Split16":
-                this.isPressed = true
-                break
-            case "Split8":
-                this.isPressed = true
-                break
-            case "Split4":
-                this.isPressed = true
-                break
-            case "Split":
-                this.isPressed = true
-                break
-            default:
-                break
-        }
-    } else if (event.button === 2) {
-        switch ($("#rightMouse").val()) {
-            case "Feed":
-                this.isPressed = true
-                break
-            case "Split16":
-                this.isPressed = true
-                break
-            case "Split8":
-                this.isPressed = true
-                break
-            case "Split4":
-                this.isPressed = true
-                break
-            case "Split":
-                this.isPressed = true
-                break
-            default:
-                break
-        }
-    }
-})
-
-$("#overlays2").on("mouseup", (event) => {
-    if (event.button === 0) {
-        switch ($("#leftMouse").val()) {
-            case "Feed":
-                this.isPressed = false
-                break
-            case "Split16":
-                this.isPressed = false
-                break
-            case "Split8":
-                this.isPressed = false
-                break
-            case "Split4":
-                this.isPressed = false
-                break
-            case "Split":
-                this.isPressed = false
-                break
-            default:
-                break
-        }
-    } else if (event.button === 2) {
-        switch ($("#rightMouse").val()) {
-            case "Feed":
-                this.isPressed = false
-                break
-            case "Split16":
-                this.isPressed = false
-                break
-            case "tripleSplit":
-                this.isPressed = false
-                break
-            case "Split4":
-                this.isPressed = false
-                break
-            case "Split":
-                this.isPressed = false
-                break
-            default:
-                break
-        }
-    }
-})
-
-function refreshHotkeySettingPage() {
-    console.log("restoring")
-    let codeSegments = $(".hotkey")
-    for (let i = 0; i < codeSegments.length; i++) {
-        $(codeSegments[i]).text(" ")
-    }
-    for (let version in Keysbind.hotkeyMapping) {
-        $("[data-hotkeyid=" + Keysbind.hotkeyMapping[version] + "]").text(version)
-    }
-}
-
 class Keysbind {
 
     static macroIntervalID
@@ -132,6 +33,13 @@ class Keysbind {
         }
     }
 
+    static processKey(event) {
+        let IE_KEYS = {}
+        let key = this.isValidHotKey(event.code) || event.key.toLowerCase()
+        if (Object.hasOwnProperty.call(IE_KEYS, key)) key = IE_KEYS[key] // IE fix
+        return key
+    }
+
     static getPressedKey(event) {
         let optsData = ""
     
@@ -157,23 +65,34 @@ class Keysbind {
         return optsData
     }
 
+    static isValidHotKey(event) {
+        return (
+            (48 <= event.keyCode && event.keyCode <= 57) || // Numbers 0-9
+            (65 <= event.keyCode && event.keyCode <= 90) || // Uppercase letters A-Z
+            event.keyCode === 9 || // Tab key
+            event.keyCode === 13 || // Enter key
+            event.keyCode === 27 ||  // ESC key
+            event.keyCode === 32 // SPACE
+        )
+    }
+
     static keydown(event) {
         if ("input" !== event.target.tagName.toLowerCase() && "textarea" !== event.target.tagName.toLowerCase()) {
             let username = ""
-            if (Functions.isValidHotKey(event) && (username = Keysbind.getPressedKey(event)) && 18 === event.keyCode && event.preventDefault() && Keysbind.selectedHotkeyRow) {
+            if (Keysbind.isValidHotKey(event) && (username = Keysbind.getPressedKey(event)) && 18 === event.keyCode && event.preventDefault() && Keysbind.selectedHotkeyRow) {
                 if (46 === event.keyCode) {
                     event.preventDefault()
-                    Keysbind.selectedHotkeyRow.find(".hotkey").text(username)
+                    Keysbind.selectedHotkeyRow.find(".hotkey").val(username)
                 } else {
                     if ("" !== username) {
                         event.preventDefault()
                         let codeSegments = $(".hotkey")
                         for (let i = 0; i < codeSegments.length; i++) {
-                            if ($(codeSegments[i]).text() === username) {
+                            if ($(codeSegments[i]).val() === username) {
                                 return
                             }
                         }
-                        Keysbind.selectedHotkeyRow.find(".hotkey").text(username)
+                        Keysbind.selectedHotkeyRow.find(".hotkey").val(username)
                         Keysbind.selectedHotkeyRow.removeClass("table-row-selected")
                         Keysbind.selectedHotkeyRow = null
                     }
@@ -190,7 +109,7 @@ class Keysbind {
                 }
             }
         }
-        const key = Functions.processKey(event)
+        const key = Keysbind.processKey(event)
         if (Keysbind.pressed[key]) return
         if (Object.hasOwnProperty.call(Keysbind.pressed, key)) Keysbind.pressed[key] = true
         if (key === 'enter') {
@@ -208,22 +127,22 @@ class Keysbind {
 
     static keyup(event) {
         if ("input" !== event.target.tagName.toLowerCase() || "textarea" !== event.target.tagName.toLowerCase() || 13 === event.keyCode) {
-            var rt = ""
-            if (Functions.isValidHotKey(event)) {
-                rt = Keysbind.getPressedKey(event)
+            var pressed = ""
+            if (Keysbind.isValidHotKey(event)) {
+                pressed = Keysbind.getPressedKey(event)
             }
-            if ("" !== rt) {
+            if ("" !== pressed) {
                 event.preventDefault()
-                if (Keysbind.hotkeyMapping[rt]) {
-                    if (Keysbind.hotkeyConfig[Keysbind.hotkeyMapping[rt]]) {
-                        if (Keysbind.hotkeyConfig[Keysbind.hotkeyMapping[rt]].keyUp) {
-                            Keysbind.hotkeyConfig[Keysbind.hotkeyMapping[rt]].keyUp()
+                if (Keysbind.hotkeyMapping[pressed]) {
+                    if (Keysbind.hotkeyConfig[Keysbind.hotkeyMapping[pressed]]) {
+                        if (Keysbind.hotkeyConfig[Keysbind.hotkeyMapping[pressed]].keyUp) {
+                            Keysbind.hotkeyConfig[Keysbind.hotkeyMapping[pressed]].keyUp()
                         }
                     }
                 }
             }
         }
-        const key = Functions.processKey(event)
+        const key = Keysbind.processKey(event)
         if (Object.hasOwnProperty.call(Keysbind.pressed, key)) Keysbind.pressed[key] = false
     }
 
@@ -334,6 +253,17 @@ class Keysbind {
         }
     }
 
+    static refreshHotkeySettingPage() {
+        console.log("restoring")
+        let codeSegments = $(".hotkey")
+        for (let i = 0; i < codeSegments.length; i++) {
+            $(codeSegments[i]).val(" ")
+        }
+        for (let version in Keysbind.hotkeyMapping) {
+            $("[data-hotkeyid=" + Keysbind.hotkeyMapping[version] + "]").val(version)
+        }
+    }
+
     static setUpHotKeyConfigPage() {
         var body = $('<div id="hotkeys_setting" class="modal fade" role="dialog"/>').append(Keysbind.getHotkeyDivHtml())
         $("#KeysContainerBinds").append(body)
@@ -344,7 +274,7 @@ class Keysbind {
             }
             Keysbind.selectedHotkeyRow = null
             console.log("reset setUpHotKeyConfigPage?")
-            refreshHotkeySettingPage()
+            Keysbind.refreshHotkeySettingPage()
         })
         $("#hotkey_table .row").not(".header").on("click", function () {
             if (Keysbind.selectedHotkeyRow) {
@@ -361,15 +291,29 @@ class Keysbind {
         var $message = $("<div class='row'></div>")
         $message.append($(`<div class='cell cell1' style='background:rgba(137, 24, 24, 0.69)'>Hotkey</div>`))
         $message.append($(`<div class='cell cell2' style='background:rgba(137, 24, 24, 0.69)'>Function</div>`))
-        $message.append($(`<div class='cell cell3' style='background:rgba(137, 24, 24, 0.69)'>Message</div>`))
         rendered.append($message)
         $message = null
         for (let type in Keysbind.hotkeyConfig) {
             $message = $("<div class='row'></div>")
-            $message.append($(`<div data-hotkeyId='${type}' class='cell1 hotkey'>${Keysbind.getHotkeyById(type)}</div>`))
+
+            const hotkeyInput = $(`<input type='text' data-hotkeyId='${type}' class='cell1 hotkey' readonly/>`)
+            hotkeyInput.val(Keysbind.getHotkeyById(type))
+
+            $message.append(hotkeyInput)
             $message.append($(`<div class='cell cell2'>${Keysbind.hotkeyConfig[type].name}</div>`))
-            $message.append($(`<div class='cell cell3'> / </div>`))
             rendered.append($message)
+
+            hotkeyInput.on('keydown', (event) => {
+                event.preventDefault()
+            })
+
+            hotkeyInput.on('keyup', (event) => {
+                if (Keysbind.isValidHotKey(event)) {
+                    const pressedKey = Keysbind.getPressedKey(event)
+                    hotkeyInput.val(pressedKey)
+                    Keysbind.saveHotkeys()
+                }
+            })
         }
         return fragment.append(rendered)
     }
@@ -378,20 +322,17 @@ class Keysbind {
         let codeSegments = $(".hotkey")
         Keysbind.hotkeyMapping = {}
         for (let i = 0; i < codeSegments.length; i++) {
-            Keysbind.hotkeyMapping[$(codeSegments[i]).text()] = $(codeSegments[i]).attr("data-hotkeyid")
+            const $codeSegment = $(codeSegments[i])
+            const hotkeyValue = $codeSegment.val() // Use val() to get the input value
+            Keysbind.hotkeyMapping[hotkeyValue] = $codeSegment.attr("data-hotkeyid")
         }
         Settings._setStorage("hotkeyMapping", Keysbind.hotkeyMapping)
-    
-        localStorage.setItem("RightMouse", $("#rightMouse").val())
-        localStorage.setItem("LeftMouse", $("#leftMouse").val())
-    
+
         if (Keysbind.selectedHotkeyRow) {
             Keysbind.selectedHotkeyRow.removeClass("table-row-selected")
         }
-
-        $("#KeysPanelbg").hide()
     }
-    
+
     static resetDefaultHotkey() {
         console.log("click reset")
         var e = Keysbind.hotkeyMapping
@@ -403,8 +344,16 @@ class Keysbind {
                 }
             }
         }
+    
+        $(".hotkey").each(function () {
+            const hotkeyId = $(this).attr("data-hotkeyid")
+            const defaultHotkey = Keysbind.hotkeyConfig[hotkeyId].defaultHotkey
+            $(this).val(defaultHotkey)
+        })
+
+        Keysbind.saveHotkeys()
         Keysbind.hotkeyMapping = Keysbind.defaultHotkeyMapping
-        refreshHotkeySettingPage()
+        Keysbind.refreshHotkeySettingPage()
         Keysbind.hotkeyMapping = e
 
         Keysbind.defaultHotkeyMapping = null

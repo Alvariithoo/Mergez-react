@@ -86,10 +86,6 @@ class Settings {
         Keybind.setupHotKey()
         SetOptions.restoreSetting()
         Keybind.setUpHotKeyConfigPage()
-        if (localStorage.getItem("LeftMouse") && localStorage.getItem("RightMouse")) {
-            $("#rightMouse").val(localStorage.getItem("RightMouse"))
-            $("#leftMouse").val(localStorage.getItem("LeftMouse"))
-        } else Logger.warn("Error saving mouse storage")
     }
     
     static _setStorage(key, value){
