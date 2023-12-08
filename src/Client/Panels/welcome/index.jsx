@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Welcome() {
+export function Welcome() {
     return (
         <>
             <div className="ver-align opac0">
@@ -20,5 +20,3 @@ function Welcome() {
         </>
     )
 }
-
-export default Welcome

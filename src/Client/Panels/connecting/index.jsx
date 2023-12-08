@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Connecting() {
+export function Connecting() {
     return (
         <>
             <div id="connecting">
@@ -15,5 +15,3 @@ function Connecting() {
         </>
     )
 }
-
-export default Connecting

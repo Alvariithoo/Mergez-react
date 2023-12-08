@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Gallery() {
+export function Gallery() {
     function hide(event) {
         if (event.target === this) this.hide()
     }
@@ -15,5 +15,3 @@ function Gallery() {
         </>
     )
 }
-
-export default Gallery

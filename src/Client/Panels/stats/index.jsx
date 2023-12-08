@@ -2,7 +2,7 @@ import React from 'react'
 import logo from '../../../logo.svg'
 import 'material-icons/iconfont/material-icons.css'
 
-function StatsHub() {
+export function StatsHub() {
     return (
         <>
             <div id="overlays2">
@@ -76,5 +76,3 @@ function StatsHub() {
         </>
     )
 }
-
-export default StatsHub

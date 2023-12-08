@@ -1,5 +1,3 @@
-import $ from 'jquery'
-
 import Logger from '../Network/Logger'
 import Functions from '../Game/Functions'
 import Keybind from './Hotkeys'

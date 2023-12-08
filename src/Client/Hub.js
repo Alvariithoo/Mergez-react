@@ -2,21 +2,7 @@ import React, { useEffect } from 'react'
 
 import { Mergez } from './Core'
 
-import Gallery from './Panels/gallery/galley'
-import Welcome from './Panels/welcome/welcome'
-
-import Left from './Panels/menu/left'
-import MainPanel from './Panels/menu/main'
-import Right from './Panels/menu/right'
-
-import Hat from './Panels/hat/hat'
-import Wager from './Panels/wager/wager'
-import Leaderboard from './Panels/leaderboard/leaderboard'
-import Keybinds from './Panels/keybinds/keybinds'
-import FooterButton from './Panels/footer/footer'
-
-import StatsHub from './Panels/stats'
-import Connecting from './Panels/connecting/connecting'
+import { Gallery, Welcome, Left, MainPanel, Right, Hat, Wager, Leaderboard, Keybinds, FooterButton, StatsHub, Connecting } from './Panels'
 
 import $ from 'jquery'
 

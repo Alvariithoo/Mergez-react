@@ -3,7 +3,7 @@ import $ from 'jquery'
 import 'material-icons/iconfont/material-icons.css'
 import Keysbind from '../../Core/Settings/Hotkeys'
 
-function Keybinds() {
+export function Keybinds() {
 
     function toggleKeys() {
         $('#KeysPanelbg').hide()
@@ -49,5 +49,3 @@ function Keybinds() {
         </>
     )
 }
-
-export default Keybinds

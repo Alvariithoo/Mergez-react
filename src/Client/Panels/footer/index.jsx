@@ -1,7 +1,7 @@
 import React  from 'react'
 import packageJson from '../../../../package.json'
 
-function FooterButton() {
+export function FooterButton() {
     return (
         <>
             <div className="footer">
@@ -10,5 +10,3 @@ function FooterButton() {
         </>
     )
 }
-
-export default FooterButton

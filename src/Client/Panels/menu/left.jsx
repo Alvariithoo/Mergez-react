@@ -2,7 +2,7 @@ import React from 'react'
 import $ from 'jquery'
 import 'material-icons/iconfont/material-icons.css'
 
-function Left() {
+export function Left() {
 
     const showHats = () => {
         $('#hatsPanel-bg').show()
@@ -34,5 +34,3 @@ function Left() {
         </>
     )
 }
-
-export default Left

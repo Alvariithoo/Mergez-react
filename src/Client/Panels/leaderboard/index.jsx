@@ -3,7 +3,7 @@ import 'material-icons/iconfont/material-icons.css'
 
 import { leaderboardClose } from '../../Core/Leaderboard'
 
-function Leaderboard() {
+export function Leaderboard() {
     return (
         <>
             <div id="lbPanel-bg">
@@ -34,5 +34,3 @@ function Leaderboard() {
         </>
     )
 }
-
-export default Leaderboard

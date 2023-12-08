@@ -6,7 +6,7 @@ import Network from '../../Core/Network'
 import 'material-icons/iconfont/material-icons.css'
 
 
-function Right() {
+export function Right() {
 
     document.addEventListener('click', (e) => {
         if (e.target && (e.target.id === "server" || e.target.id === "server-label" || e.target.id === "number-label")) {
@@ -71,5 +71,3 @@ function Right() {
         </>
     )
 }
-
-export default Right

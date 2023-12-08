@@ -5,7 +5,7 @@ import 'material-icons/iconfont/material-icons.css'
 import { CreateWagerRoom, closeWager, wagerCloseRoom, wagerJoinRoom } from '../../Core/Game/wager'
 
 
-function Wager() {
+export function Wager() {
 
     const joinWager = () => {
         wagerJoinRoom($('#wagerCodeInput').val())
@@ -89,5 +89,3 @@ function Wager() {
         </>
     )
 }
-
-export default Wager

@@ -11,7 +11,7 @@ import Network from '../../Core/Network'
 import Functions from '../../Core/Game/Functions'
 import noSkin from '../../../img/noskin.png'
 
-function MainPanel() {
+export function MainPanel() {
 
     function defaultSkin(event) {
         event.target.src = noSkin
@@ -123,15 +123,6 @@ function MainPanel() {
                 <div className="tab" href="sliders" id="sliders">
                     <hr id="server-hr" />
                     <div className="toggles">
-                        <div>
-                            <p className="picker-text">Cell Text Position</p>
-                            <select className="select-theming" onChange="">
-                                <option disabled="">Cell Text Position</option>
-                                <option>Top</option>
-                                <option defaultValue="selected">Middle</option>
-                                <option>Bottom</option>
-                            </select>
-                        </div>
                         <hr id="server-hr" />
                         <div className="range-container">
                             <div id="AnimationDelay" />
@@ -144,5 +135,3 @@ function MainPanel() {
         </>
     )
 }
-
-export default MainPanel

@@ -5,7 +5,7 @@ import 'material-icons/iconfont/material-icons.css'
 
 import { getLeaderboard } from '../../Core/Leaderboard'
 
-function Hat() {
+export function Hat() {
 
     const closeHats = () => {
         $('#hatsPanel-bg').hide()
@@ -143,5 +143,3 @@ function Hat() {
         </>
     )
 }
-
-export default Hat
