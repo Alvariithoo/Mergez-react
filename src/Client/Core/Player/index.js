@@ -33,13 +33,13 @@ export class Player {
                 if (cell) {
                     Minimap.drawpl.beginFill(0xffffff)
                     Minimap.drawpl.arc(myPosX, myPosY, 5, 0, PI_2) 
-                    Minimap.mapplayer.addChild(Minimap.drawpl)
+                    Minimap.player.addChild(Minimap.drawpl)
                 }
             }
         } else {
             Minimap.drawpl.beginFill(0xFAAFFF)
             Minimap.drawpl.arc(myPosX, myPosY, 5, 0, PI_2)
-            Minimap.mapplayer.addChild(Minimap.drawpl)
+            Minimap.player.addChild(Minimap.drawpl)
         }
 
         cell = null

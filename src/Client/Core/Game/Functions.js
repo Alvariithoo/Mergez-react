@@ -56,9 +56,6 @@ class Functions {
     }
 
     static drawGrid() {
-        if (Settings.list.fancyGrid === true) return
-        Settings.list.fancyGrid = true
-        
         if (window.drawMapInstance) window.drawMapInstance.container.destroy()
         window.drawMapInstance = new drawMap(Mergez.application)
     }

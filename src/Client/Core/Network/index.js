@@ -13,14 +13,13 @@ import Cell from '../Player/Cell'
 
 import { Camera } from '../Game/Camera'
 
-import { drawMap, Minimap } from '../World'
+import { drawMap } from '../World'
 
 import { Chat } from '../Menu/Chat'
 import { Stats } from '../Menu/Stats'
 import { Leaderboard } from '../Menu/Leaderboard'
 
 import { Mergez } from '..'
-
 
 class Network {
 
@@ -326,16 +325,6 @@ class Network {
         Stats.get.fps = 1000 / Math.max(elapsed, 1)
         Stats.get.lastFrameTime = now
 
-        if (Settings.list.showMinimap) {
-            Minimap.mapsector.alpha = 1
-            Minimap.mapsquare.alpha = 1
-            Minimap.mapplayer.alpha = 1
-        } else {
-            Minimap.mapsector.alpha = 0
-            Minimap.mapsquare.alpha = 0
-            Minimap.mapplayer.alpha = 0
-        }
-        Settings.list.fancyGrid = false //?
         for (const cell of Cell.get.list) cell.update(now)
         Camera.cameraUpdate()
         for (const cell of Cell.get.list) cell.updatePlayerPosition()

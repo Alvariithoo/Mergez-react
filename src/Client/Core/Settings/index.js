@@ -16,11 +16,8 @@ class Settings {
         eatAnimation: true,
         showFPS: true,
         showMinimap: true,
-
-        
-
         showChat: true,
-    
+
         animationDelay: 120,
         hatOpcity: 1,
     }
@@ -98,6 +95,5 @@ class Settings {
         return localStorage.getItem(storageKey)
     }
 }
-
 
 export default Settings

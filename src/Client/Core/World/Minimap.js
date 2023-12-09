@@ -6,18 +6,27 @@ import { Camera } from '../Game/Camera'
 
 export class Minimap {
 
-    static mapsquare = new Container()
-    static mapsector = new Container()
-    static mapplayer = new Container()
+    static setSquare = new Container()
+    static player = new Container()
     static drawpl = new Graphics()
     static square = new Graphics()
     
     static clearSquare() {
         Minimap.square.clear()
-        while (Minimap.mapsector.children[0]) {
-            Minimap.mapsector.removeChild(Minimap.mapsector.children[0])
+        while (Minimap.setSquare.children[0]) {
+            Minimap.setSquare.removeChild(Minimap.setSquare.children[0])
         }
         this.drawSquare()
+    }
+
+    static show() {
+        Minimap.square.alpha = 1
+        Minimap.player.alpha = 1
+    }
+
+    static hide() {
+        Minimap.square.alpha = 0
+        Minimap.player.alpha = 0
     }
     
     static drawSquare() {
@@ -31,6 +40,6 @@ export class Minimap {
         Minimap.square.beginFill(0x000000)
         Minimap.square.drawRect(beginX, beginY, width, height)
         Minimap.square.alpha = 0.4
-        Minimap.mapsquare.addChild(Minimap.square)
+        Minimap.square.addChild(Minimap.square)
     }
 }

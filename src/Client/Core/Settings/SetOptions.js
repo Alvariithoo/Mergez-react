@@ -1,10 +1,8 @@
-
-
 import $ from 'jquery'
 
 import Settings from '../Settings'
 import Keysbind from './Hotkeys'
-
+import { Minimap } from '../World'
 
 export class SetOptions {
     static setupOption() {
@@ -12,27 +10,28 @@ export class SetOptions {
             showNames: {
                 text: "Names",
                 "default": true,
-                handler: function (token) {
+                handler(token) {
                     Settings.list.showNames = token
                 }
             },
             showMass: {
                 text: "Mass",
                 "default": true,
-                handler: function (token) {
+                handler(token) {
                     Settings.list.showMass = token
                 }
             },
             showChat: {
                 text: "Chat",
                 "default": true,
-                handler: function (token) {
+                handler(token) {
                     Settings.list.showChat = token
                 }
             },
             fancyGrid: {
                 text: 'Grids',
                 "default": true,
+                disabled: true,
                 handler(token) {
                     Settings.list.fancyGrid = token
                 }
@@ -40,28 +39,28 @@ export class SetOptions {
             showMinimap: {
                 text: "Minimap",
                 "default": true,
-                handler: function (token) {
-                    Settings.list.showMinimap = token
+                handler(token) {
+                    Settings.list.showMinimap ? Minimap.hide() : Minimap.show()
                 }
             },
             showSkins: {
                 text: "Skins",
                 "default": true,
-                handler: function (token) {
+                handler(token) {
                     Settings.list.showSkins = token
                 }
             },
             showFPS: {
                 text: "FPS",
                 "default": true,
-                handler: function (token) {
+                handler(token) {
                     Settings.list.showFPS = token
                 }
             },
             eatAnimation: {
                 text: "Eat Animations",
                 "default": true,
-                handler: function (token) {
+                handler(token) {
                     Settings.list.eatAnimation = token
                 }
             }

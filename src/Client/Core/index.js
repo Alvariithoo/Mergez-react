@@ -54,9 +54,8 @@ export class Mergez {
 
         Mergez.application.stage.addChild(Mergez.bgContainer)
         Mergez.application.stage.addChild(Mergez.cellContainer)
-        Mergez.application.stage.addChild(Minimap.mapsquare)
-        Mergez.application.stage.addChild(Minimap.mapsector)
-        Mergez.application.stage.addChild(Minimap.mapplayer)
+        Mergez.application.stage.addChild(Minimap.setSquare)
+        Mergez.application.stage.addChild(Minimap.player)
 
         Mergez.chatRoom = Functions.byId('chatroom')
         Mergez.chatArea = Functions.byId('chatboxArea2')
