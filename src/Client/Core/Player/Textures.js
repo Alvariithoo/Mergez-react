@@ -12,33 +12,37 @@ class Textures {
         virus: null
     }
 
-    static generateTextures() {    
-        let Cell = new Graphics()
-        Cell.beginFill(0xFFFFFF)
-        Cell.drawCircle(0, 0, 512)
-        Cell.endFill()
-        Textures.entity.cell = Mergez.application.renderer.generateTexture(Cell)
-    
-        let Food = new Graphics()
-        Food.beginFill(0xFFFFFF)
-        Food.drawCircle(0, 0, 64)
-        Food.endFill()
-        Textures.entity.food = Mergez.application.renderer.generateTexture(Food)
-    
-        let Pellet = new Graphics()
-        Pellet.beginFill(0xFFFFFF)
-        Pellet.drawCircle(0, 0, 64)
-        Pellet.endFill()
-        Textures.entity.pellet = Mergez.application.renderer.generateTexture(Pellet)
-
-        let Virus = new Graphics()
-        Virus.beginTextureFill({ texture: utils.TextureCache['Virus'] })
-        Virus.drawCircle(256, 256, 256)
-        Virus.endFill()
-        Textures.entity.virus = Mergez.application.renderer.generateTexture(Virus)
+    static get(name) {
+        return Mergez.application.renderer.generateTexture(name)
     }
 
-    static preloadSprites(){
+    static generateTextures() { 
+        let Cell = new Graphics()
+            .beginFill(0xFFFFFF)
+            .drawCircle(0, 0, 512)
+            .endFill()
+        Textures.entity.cell = Textures.get(Cell)
+    
+        let Food = new Graphics()
+            .beginFill(0xFFFFFF)
+            .drawCircle(0, 0, 64)
+            .endFill()
+        Textures.entity.food = Textures.get(Food)
+    
+        let Pellet = new Graphics()
+            .beginFill(0xFFFFFF)
+            .drawCircle(0, 0, 64)
+            .endFill()
+        Textures.entity.pellet = Textures.get(Pellet)
+
+        let Virus = new Graphics()
+            .beginTextureFill({ texture: utils.TextureCache['Virus'] })
+            .drawCircle(256, 256, 256)
+            .endFill()
+        Textures.entity.virus = Textures.get(Virus)
+    }
+
+    static preloadSprites() {
         const spriteLoader = new Loader()
         spriteLoader.add([
             { name: 'Virus', url: './sprites/virus.png' },

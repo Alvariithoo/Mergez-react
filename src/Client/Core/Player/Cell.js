@@ -188,8 +188,8 @@ class Cell {
         this.drawSprite()
     }
     drawSkin() {
-        var texture = this.drawSkinTexture(`${Cell.SKIN_URL}${this.skin}.png`)
-        var isNonSkin = false
+        let texture = this.drawSkinTexture(`${Cell.SKIN_URL}${this.skin}.png`)
+        let isNonSkin = false
 
         if (texture.then || texture === "not_loaded") {
             texture = Textures.entity.cell
@@ -223,7 +223,7 @@ class Cell {
                         .beginTextureFill({ texture: loadedTexture })
                         .drawCircle(pixels / 2, pixels / 2, pixels / 2)
                         .endFill()
-                    let texture = Mergez.application.renderer.generateTexture(skinGraphics)
+                    let texture = Textures.get(skinGraphics)
                     Cell.SKIN_CACHE[image] = texture
                     this.reDraw()
                     resolve(texture)
@@ -275,12 +275,12 @@ class Cell {
             strokeThickness: 10
         }
         let text = new Text(this.name, this.style)
-        let texture = Mergez.application.renderer.generateTexture(text)
-        this.nameSprite = new Sprite(texture)
+        let cache = Textures.get(text)
+        this.nameSprite = new Sprite(cache)
         this.nameSprite.texture.baseTexture.mipmap = true
         this.nameSprite.anchor.set(.5)
 
-        Cell.NICK_CACHE[this.name] = texture
+        Cell.NICK_CACHE[this.name] = cache
         return this.nameSprite
     }
     shortMass(mass) {
@@ -309,11 +309,11 @@ class Cell {
         let _mass = this._getMassInstance()
         _mass.text = mass
     
-        let texture = Mergez.application.renderer.generateTexture(_mass)
-        this.massSprite = new Sprite(texture)
+        let cache = Textures.get(_mass)
+        this.massSprite = new Sprite(cache)
         this.massSprite.anchor.set(.5)
 
-        Cell.MASS_CACHE[mass] = texture
+        Cell.MASS_CACHE[mass] = cache
         return this.massSprite
     }
 }
