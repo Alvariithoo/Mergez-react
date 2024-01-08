@@ -1338,13 +1338,15 @@ input[type=checkbox]:checked:before {
 .footer {
     position: absolute;
     bottom: 0;
-    padding: 9px;
-    background: #212121;
-    border-top-left-radius: 2px;
-    width: fit-content;
     left: 0;
     right: 0;
     margin: auto;
+    padding: 9px;
+    height: 40px;
+    color: #FFF;
+    background: #212121;
+    border-top-left-radius: 2px;
+    width: fit-content;
 }
 
 n2 {
@@ -1501,7 +1503,7 @@ n2 {
 .servers-panel {
     display: block;
     overflow-y: scroll;
-    height: 285;
+    height: 285px;
     width: 224px;
     padding: 3px;
     margin-left: -15px;

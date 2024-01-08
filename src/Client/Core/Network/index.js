@@ -87,7 +87,7 @@ class Network {
         this.ws.binaryType = 'arraybuffer'
         this.ws.onopen = this.wsOpen
         this.ws.onmessage = this.wsMessage
-        this.ws.onerror = this.wsError
+        this.ws.onerror = null // this.wsError
         this.ws.onclose = this.wsClose
     }
 
@@ -102,9 +102,9 @@ class Network {
         } else Logger.info("Connected to the Server")
     }
 
-    static wsError(error) {
-        Logger.warn(error)
-    }
+    // static wsError(error) {
+    //     Logger.warn(error)
+    // }
 
     static wsClose(e) {
         if (e.currentTarget !== this.ws) return

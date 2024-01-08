@@ -10,7 +10,6 @@ export function Keybinds() {
     }
 
     function reseting() {
-        console.log("button reset")
         Keysbind.resetDefaultHotkey()
     }
     

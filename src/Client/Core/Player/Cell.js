@@ -63,7 +63,7 @@ class Cell {
     }
     destroy(killerId) {
         delete Cell.get.byId[this.id]
-        if (Cell.get.mine.remove(this.id) && Cell.get.mine.length === 0) ( Functions.showESCOverlay() && console.log("death") )
+        if (Cell.get.mine.remove(this.id) && Cell.get.mine.length === 0) ( Functions.showESCOverlay() )
         this.destroyed = true
         this.dead = this.syncUpdStamp
         if (killerId && !this.diedBy) {

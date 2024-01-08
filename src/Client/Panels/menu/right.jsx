@@ -45,7 +45,6 @@ export function Right() {
         addServer('127.0.0.1', 7251, "Ultrasplit")
         addServer('127.0.0.1', 7251, "Ultrafeed")
         addServer('127.0.0.1', 7251, "Dev Server")
-        console.log("servers added")
         getServers()
     }, 1500)
 

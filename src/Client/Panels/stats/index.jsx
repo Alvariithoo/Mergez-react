@@ -20,7 +20,7 @@ export function StatsHub() {
                     </div>
                     <input id="input_box2" type="text" maxLength={64} />
                 </div>
-                <div id="admin">
+                {/* <div id="admin">
                     <div>
                         <img id="avatar_pic" src={logo} alt="" />
                         <span className="discord">Unnamed</span>
@@ -71,7 +71,7 @@ export function StatsHub() {
                         <li>3 - Set player mass 30k</li>
                         <li>4 - Spawn virus</li>
                     </ul>
-                </div>
+                </div> */}
             </div>
         </>
     )

@@ -254,7 +254,6 @@ class Keysbind {
     }
 
     static refreshHotkeySettingPage() {
-        console.log("restoring")
         let codeSegments = $(".hotkey")
         for (let i = 0; i < codeSegments.length; i++) {
             $(codeSegments[i]).val(" ")
@@ -273,7 +272,6 @@ class Keysbind {
                 Keysbind.selectedHotkeyRow.removeClass("table-row-selected")
             }
             Keysbind.selectedHotkeyRow = null
-            console.log("reset setUpHotKeyConfigPage?")
             Keysbind.refreshHotkeySettingPage()
         })
         $("#hotkey_table .row").not(".header").on("click", function () {
@@ -334,7 +332,6 @@ class Keysbind {
     }
 
     static resetDefaultHotkey() {
-        console.log("click reset")
         var e = Keysbind.hotkeyMapping
         Keysbind.defaultHotkeyMapping = {}
         for (const unlock in Keysbind.hotkeyConfig) {

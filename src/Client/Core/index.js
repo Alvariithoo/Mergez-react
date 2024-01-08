@@ -119,7 +119,7 @@ export class Mergez {
         Network.gameReset()
         Functions.showESCOverlay()
 
-        Logger.warn(`Init done in ${Date.now() - Mergez.LOAD_START}ms`)
+        // Logger.warn(`Init done in ${Date.now() - Mergez.LOAD_START}ms`)
         Textures.preloadSprites()
 
         BitmapFont.from("Ubuntu", {
