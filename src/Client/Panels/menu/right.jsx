@@ -1,5 +1,5 @@
 import React from 'react'
-import { wager } from '../../Core/Game/wager'
+import { wager } from '../../Core/Utils/Wager'
 
 import $ from 'jquery'
 import Network from '../../Core/Network'
@@ -30,6 +30,7 @@ export function Right() {
 
     function getServers() {
         let serversList = servers
+        $("#server-container").empty()
         if (!serversList.length) return $("#server-container").html('<p style="text-align: center">Offline</p>')
         for (let i = 0; i < serversList.length; i++) {
             $("#server-container").append(`
@@ -42,6 +43,7 @@ export function Right() {
     }
     
     setTimeout(() => {
+        servers.length = 0
         addServer('127.0.0.1', 7251, "Ultrasplit")
         addServer('127.0.0.1', 7251, "Ultrafeed")
         addServer('127.0.0.1', 7251, "Dev Server")

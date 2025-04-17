@@ -1807,6 +1807,7 @@ n2 {
     cursor: pointer;
     transition: .3s;
     animation: 0.5s fadeIn;
+    color: #fff;
 }
 
 #account-info {
@@ -3004,12 +3005,6 @@ UserName {
     width: 100%;
 }
 
-.wagerLoadingAnim, .lbLoadingAnim {
-    position: relative;
-    width: 80px;
-    height: 80px;
-}
-
 .wagerLoadingAnim::before, .lbLoadingAnim::before {
     content: '';
     position: absolute;
@@ -3043,6 +3038,7 @@ UserName {
 .wagerRoomsTitle {
     margin: 0;
     background: #00000036;
+    color: #ffffff;
     width: 100%;
     padding: 1rem;
     border-radius: 4px;
@@ -3075,6 +3071,7 @@ UserName {
 
 .wagerRoomsTableHeaderCell,
 .wagerRoomsTableCell {
+    color: #fff;
     flex: 1;
     padding: 8px;
     text-align: center;
@@ -3181,6 +3178,7 @@ UserName {
     user-select: text;
     white-space: break-spaces;
     flex: 3;
+    color: #fff;
 }
 
 #wagerChatInput {
@@ -3241,6 +3239,7 @@ UserName {
     height: 100%;
     width: 100%;
     text-align: center;
+    color: #fff;
 }
 
 .wagerRoomCode {
@@ -3460,7 +3459,6 @@ span#leaderboard-button:hover {
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  background: url('../img/checkerboard.png');
   background-repeat: no-repeat;
   background-size: 150px 150px;
   box-shadow: 0 0 8px rgba(0, 0, 0, .8);

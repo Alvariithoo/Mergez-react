@@ -1,7 +1,7 @@
-import Functions from "./Functions"
-import { Mergez } from ".."
-import Cell from "../Player/Cell"
-import { Stats } from "../Menu/Stats"
+import Cell from './Cell'
+import { Stats } from '../Menu/Stats'
+import { Minimap } from '../World'
+import Utils from '../Utils'
 
 export class Camera {
 
@@ -87,15 +87,15 @@ export class Camera {
         Camera.get.oldPos.x = Camera.get.x
         Camera.get.oldPos.y = Camera.get.y
     
-        this.toCamera(Mergez.cellContainer)
-        this.fromCamera(Mergez.cellContainer)
-        this.toCamera(Mergez.bgContainer)
-        this.fromCamera(Mergez.bgContainer)
+        this.toCamera(Minimap.cellContainer)
+        this.fromCamera(Minimap.cellContainer)
+        this.toCamera(Minimap.bgContainer)
+        this.fromCamera(Minimap.bgContainer)
         Camera.get.updated = Date.now()
     }
 
     static handleScroll(event) {
-        if (event.target !== Functions.byId('overlays2')) return
+        if (event.target !== Utils.byId('overlays2')) return
         Camera.get.userZoom *= event.deltaY > 0 ? 0.8 : 1.2
         Camera.get.userZoom = Math.max(Camera.get.userZoom, .01)
         Camera.get.userZoom = Math.min(Camera.get.userZoom, 4)

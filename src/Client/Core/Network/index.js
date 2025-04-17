@@ -1,25 +1,24 @@
 import $ from 'jquery'
 
-import Functions from '../Game/Functions'
+import Utils from '../Utils'
 
 import Logger from './Logger'
 import Settings from '../Settings'
 import Reader from './Reader'
 
-import { Player } from '../Player'
-
 import Color from '../Player/Color'
 import Cell from '../Player/Cell'
 
-import { Camera } from '../Game/Camera'
+import { Mapp, Minimap } from '../World'
 
-import { drawMap } from '../World'
+import { Camera } from '../Player/Camera'
 
 import { Chat } from '../Menu/Chat'
 import { Stats } from '../Menu/Stats'
 import { Leaderboard } from '../Menu/Leaderboard'
 
-import { Mergez } from '..'
+import Writer from '../Network/Writer'
+import { App } from '../World/App'
 
 class Network {
 
@@ -28,6 +27,10 @@ class Network {
         this.WEBSOCKET_URL = null
         this.wsUrl = this.WEBSOCKET_URL
         this.ws = null
+    }
+
+    static init() {
+        this.startGameLoop()
     }
 
     static UINT8_CACHE = {
@@ -47,32 +50,16 @@ class Network {
         else this.ws.send(data)
     }
 
-    static gameReset() {
-        Functions.cleanupObject(Cell.get)
-        Functions.cleanupObject(drawMap.border)
-        Functions.cleanupObject(Leaderboard.get)
-        Functions.cleanupObject(Chat.get)
-        Functions.cleanupObject(Stats.stats)
-        Chat.get.messages = []
-        Leaderboard.get.items = []
-        Cell.get.mine = []
-        Cell.get.byId = new Map()
-        Cell.get.list = []
-        Camera.get.x = Camera.get.y = Camera.get.target.x = Camera.get.target.y = 0
-        Camera.get.scale = Camera.get.target.scale = 1
-        Settings.ingame.mapCenterSet = false
-    }
-
     static wsCleanup() {
         if (!this.ws) return
-        Functions.showESCOverlay()
+        Utils.showESCOverlay()
         Logger.debug('WebSocket cleanup')
         this.ws.onopen = null
         this.ws.onmessage = null
         this.ws.close()
         this.ws = null
-        while (Mergez.cellContainer.children[0]) {
-            Mergez.cellContainer.removeChild(Mergez.cellContainer.children[0])
+        while (Minimap.cellContainer.children[0]) {
+            Minimap.cellContainer.removeChild(Minimap.cellContainer.children[0])
         }
     }
 
@@ -96,7 +83,7 @@ class Network {
         Network.wsSend(new Uint8Array([254, 6, 0, 0, 0]))
         Network.wsSend(new Uint8Array([255, 1, 0, 0, 0]))
         if (Settings.list.wagerWs) {
-            Functions.hideESCOverlay()
+            Utils.hideESCOverlay()
             $("#wagerPanel-bg").hide()
             setTimeout(this.sendPlay, 1e3)
         } else Logger.info("Connected to the Server")
@@ -248,20 +235,20 @@ class Network {
                 break
             }
             case 0x40: { // set border
-                drawMap.border.left = reader.getFloat64()
-                drawMap.border.top = reader.getFloat64()
-                drawMap.border.right = reader.getFloat64()
-                drawMap.border.bottom = reader.getFloat64()
-                drawMap.border.width = drawMap.border.right - drawMap.border.left
-                drawMap.border.height = drawMap.border.bottom - drawMap.border.top
-                drawMap.border.centerX = (drawMap.border.left + drawMap.border.right) / 2
-                drawMap.border.centerY = (drawMap.border.top + drawMap.border.bottom) / 2
+                Mapp.border.left = reader.getFloat64()
+                Mapp.border.top = reader.getFloat64()
+                Mapp.border.right = reader.getFloat64()
+                Mapp.border.bottom = reader.getFloat64()
+                Mapp.border.width = Mapp.border.right - Mapp.border.left
+                Mapp.border.height = Mapp.border.bottom - Mapp.border.top
+                Mapp.border.centerX = (Mapp.border.left + Mapp.border.right) / 2
+                Mapp.border.centerY = (Mapp.border.top + Mapp.border.bottom) / 2
 
                 if (data.data.byteLength === 33) break
                 if (!Settings.ingame.mapCenterSet) {
                     Settings.ingame.mapCenterSet = true
-                    Camera.get.x = Camera.get.target.x = drawMap.border.centerX
-                    Camera.get.y = Camera.get.target.y = drawMap.border.centerY
+                    Camera.get.x = Camera.get.target.x = Mapp.border.centerX
+                    Camera.get.y = Camera.get.target.y = Mapp.border.centerY
                     Camera.get.scale = Camera.get.target.scale = 1
                 }
                 // reader.getUint32() // game type
@@ -283,7 +270,7 @@ class Network {
                 const rawName = reader.getStringUTF8()
                 const rawMessage = reader.getStringUTF8()
     
-                let rawXSS = Functions.escapeHtml(rawMessage)
+                let rawXSS = Network.escapeHtml(rawMessage)
                 let message = rawXSS
                 let name = Cell.parseName(rawName).name || Cell.EMPTY_NAME
     
@@ -319,19 +306,41 @@ class Network {
         }
     }
 
-    static drawGame() {
-        const now = Date.now();
-        const elapsed = now - Stats.get.lastFrameTime
-        Stats.get.fps = 1000 / Math.max(elapsed, 1)
-        Stats.get.lastFrameTime = now
+    static escapeHtml(unsafe) {
+        return unsafe
+            .replace(/&/g, "&amp")
+            .replace(/</g, "&lt")
+            .replace(/>/g, "&gt")
+            .replace(/"/g, "&quot")
+            .replace(/'/g, "&#039")
+    }
 
-        for (const cell of Cell.get.list) cell.update(now)
-        Camera.cameraUpdate()
-        for (const cell of Cell.get.list) cell.updatePlayerPosition()
-        Player.clearPlayers()
-        Functions.drawGrid()
-        
-        requestAnimationFrame(Network.drawGame)
+    static sendMouseMove(x, y) {
+        const writer = new Writer(true)
+        writer.setUint8(0x10)
+        writer.setUint32(x)
+        writer.setUint32(y)
+        writer._b.push(0, 0, 0, 0)
+        Network.wsSend(writer)
+    }
+
+    static sendChat(text) {
+        const writer = new Writer()
+        writer.setUint8(0x63)
+        writer.setUint8(0)
+        writer.setStringUTF8(text)
+        Network.wsSend(writer)
+    }
+
+    static startGameLoop() {
+        setInterval(() => {
+            Network.sendMouseMove(
+                (Settings.ingame.mouseX - window.innerWidth / 2) / Camera.get.scale + Camera.get.x,
+                (Settings.ingame.mouseY - window.innerHeight / 2) / Camera.get.scale + Camera.get.y
+            )
+
+            App.onresize()
+        }, 40)
     }
 }
 

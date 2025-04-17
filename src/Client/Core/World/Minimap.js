@@ -1,45 +1,66 @@
 import { Graphics, Container } from 'pixi.js'
 
-import { drawMap } from './Map'
+import { Mapp } from './Map'
 import { Mergez } from '..'
-import { Camera } from '../Game/Camera'
+import { Camera } from '../Player/Camera'
 
 export class Minimap {
 
     static setSquare = new Container()
+    static bgContainer = new Container()
+    static cellContainer = new Container()
+
     static player = new Container()
     static drawpl = new Graphics()
     static square = new Graphics()
+
+    static init() {
+        this.setupContainers()
+        this.drawSquare()
+    }
     
     static clearSquare() {
-        Minimap.square.clear()
-        while (Minimap.setSquare.children[0]) {
-            Minimap.setSquare.removeChild(Minimap.setSquare.children[0])
+        this.square.clear()
+        while (this.setSquare.children[0]) {
+            this.setSquare.removeChild(this.setSquare.children[0])
         }
         this.drawSquare()
     }
 
     static show() {
-        Minimap.square.alpha = 1
-        Minimap.player.alpha = 1
+        this.square.alpha = 1
+        this.player.alpha = 1
+        this.setSquare.alpha = 1
     }
 
     static hide() {
-        Minimap.square.alpha = 0
-        Minimap.player.alpha = 0
+        this.square.alpha = 0
+        this.player.alpha = 0
+        this.setSquare.alpha = 0
     }
     
     static drawSquare() {
         const targetSize = 200
-        const borderAR = drawMap.border.width / drawMap.border.height // aspect ratio
+        const borderAR = Mapp.border.width / Mapp.border.height // aspect ratio
         const width = targetSize * borderAR * Camera.get.viewportScale
         const height = targetSize / borderAR * Camera.get.viewportScale
         const beginX = Mergez.view.width - width - 5
         const beginY = Mergez.view.height - height - 5
-    
-        Minimap.square.beginFill(0x000000)
-        Minimap.square.drawRect(beginX, beginY, width, height)
-        Minimap.square.alpha = 0.4
-        Minimap.square.addChild(Minimap.square)
+
+        this.square.clear()
+        this.square.beginFill(0x000000)
+        this.square.drawRect(beginX, beginY, width, height)
+        this.square.alpha = 0.4
+        this.setSquare.addChild(this.square)
+    }
+
+    static setupContainers() {
+        this.bgContainer.sortableChildren = true
+        this.cellContainer.sortableChildren = true
+
+        Mergez.application.stage.addChild(this.bgContainer)
+        Mergez.application.stage.addChild(this.cellContainer)
+        Mergez.application.stage.addChild(this.setSquare)
+        Mergez.application.stage.addChild(this.player)
     }
 }

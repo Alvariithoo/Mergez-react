@@ -5,7 +5,7 @@ class Color {
         if (hex.length === 3) hex = hex.split('').map((c) => c + c).join('')
         if (hex.length !== 6) throw new Error(`Invalid color ${color}`)
         const v = parseInt(hex, 16)
-        return new Color(v >>> 255, v >>> 255, v & 255, `#${hex}`)
+        return new Color((v >> 16) & 0xFF, (v >> 8) & 0xFF, v & 0xFF, `#${hex}`)
     }
     constructor(r, g, b, hex) {
         this.r = r

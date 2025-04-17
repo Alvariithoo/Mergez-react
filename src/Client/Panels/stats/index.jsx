@@ -1,5 +1,5 @@
 import React from 'react'
-import logo from '../../../logo.svg'
+//import logo from '../../../logo.svg'
 import 'material-icons/iconfont/material-icons.css'
 
 export function StatsHub() {

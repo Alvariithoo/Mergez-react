@@ -1,10 +1,10 @@
 import { Container, Graphics, Texture, Sprite, BitmapText, Text, BaseTexture } from 'pixi.js'
 import Logger from '../Network/Logger'
 import Settings from '../Settings'
-import Functions from '../Game/Functions'
+import Utils from '../Utils'
 import Textures from './Textures'
-import { Mergez } from '..'
-import { Camera } from '../Game/Camera'
+import { Camera } from './Camera'
+import { Minimap } from '../World'
 
 class Cell {
 
@@ -63,7 +63,7 @@ class Cell {
     }
     destroy(killerId) {
         delete Cell.get.byId[this.id]
-        if (Cell.get.mine.remove(this.id) && Cell.get.mine.length === 0) ( Functions.showESCOverlay() )
+        if (Cell.get.mine.remove(this.id) && Cell.get.mine.length === 0) ( Utils.showESCOverlay() )
         this.destroyed = true
         this.dead = this.syncUpdStamp
         if (killerId && !this.diedBy) {
@@ -164,7 +164,7 @@ class Cell {
         }
         this.entity.position.x = this.x
         this.entity.position.y = this.y
-        Mergez.cellContainer.addChild(this.entity)
+        Minimap.cellContainer.addChild(this.entity)
     }
     drawCell() {
         let texture

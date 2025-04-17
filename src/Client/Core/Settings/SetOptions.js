@@ -1,5 +1,4 @@
 import $ from 'jquery'
-
 import Settings from '../Settings'
 import Keysbind from './Hotkeys'
 import { Minimap } from '../World'
@@ -9,132 +8,105 @@ export class SetOptions {
         const options = {
             showNames: {
                 text: "Names",
-                "default": true,
-                handler(token) {
-                    Settings.list.showNames = token
-                }
+                default: true,
+                handler: token => Settings.list.showNames = token
             },
             showMass: {
                 text: "Mass",
-                "default": true,
-                handler(token) {
-                    Settings.list.showMass = token
-                }
+                default: true,
+                handler: token => Settings.list.showMass = token
             },
             showChat: {
                 text: "Chat",
-                "default": true,
-                handler(token) {
-                    Settings.list.showChat = token
-                }
+                default: true,
+                handler: token => Settings.list.showChat = token
             },
             fancyGrid: {
-                text: 'Grids',
-                "default": true,
-                disabled: true,
-                handler(token) {
-                    Settings.list.fancyGrid = token
-                }
+                text: "Grids",
+                default: true,
+                disabled: true, handler: token => Settings.list.fancyGrid = token
             },
             showMinimap: {
                 text: "Minimap",
-                "default": true,
-                handler(token) {
-                    Settings.list.showMinimap ? Minimap.hide() : Minimap.show()
-                }
+                default: true,
+                handler: token => token ? Minimap.show() : Minimap.hide()
             },
             showSkins: {
                 text: "Skins",
-                "default": true,
-                handler(token) {
-                    Settings.list.showSkins = token
-                }
+                default: true,
+                handler: token => Settings.list.showSkins = token
             },
             showFPS: {
                 text: "FPS",
-                "default": true,
-                handler(token) {
-                    Settings.list.showFPS = token
-                }
+                default: true,
+                handler: token => Settings.list.showFPS = token
             },
             eatAnimation: {
                 text: "Eat Animations",
-                "default": true,
-                handler(token) {
-                    Settings.list.eatAnimation = token
-                }
+                default: true,
+                handler: token => Settings.list.eatAnimation = token
             }
         }
-        let row = []
-        for (let i in options) {
-            if (!options[i].disabled) {
-                row.push(`
-                    <div id="setting-container">
-                        <p id="textSetting">${options[i]["text"]}</p>
-                        <input id="${i}" type="checkbox">
-                        <label id="setting" for="${i}"></label>
-                    </div>
-                `)
-            }
-        }
-        let d = row.splice(0, 5)
-        for (let j = 0; j < d.length; j++) {
-            $(".firstSettings").append(d[j])
-        }
-        for (let j = 0; j < row.length; j++) {
-            $(".secondSettings").append(row[j])
-        }
+
+        const rows = Object.entries(options).filter(([_, opt]) => !opt.disabled).map(([id, opt]) => `
+            <div id="setting-container">
+                <p id="textSetting">${opt.text}</p>
+                <input id="${id}" type="checkbox">
+                <label id="setting" for="${id}"></label>
+            </div>
+        `)
+
+        $(".firstSettings").append(rows.slice(0, 5).join(''))
+        $(".secondSettings").append(rows.slice(5).join(''))
+
         $("input:checkbox").on("change", function () {
-            let firstRestricted = $(this).prop("checked")
-            let type = $(this).prop("id")
-            Settings._setStorage(type, firstRestricted)
-            if (options[type]) {
-                options[type].handler(firstRestricted)
-            }
+            const id = $(this).prop("id")
+            const checked = $(this).prop("checked")
+            Settings._setStorage(id, checked)
+            options[id]?.handler(checked)
         })
-        for (let i in options) {
-            if (Settings._getStorage(i)) {
-                if (options[i]["default"]) {
-                    $("#" + i).click()
-                }
-            }
-        }
-    
-        $("#AnimationDelay").append(`Animation Delay: <span id="anim_delay_txt">${Settings.list.animationDelay}</span></div><input oninput="$('#anim_delay_txt').text(this.value)" id="range-slider__range" style="width:100%" type="range" id="animDelay" name="animDelay" min="40" max="240" step="10" value="${Settings.list.animationDelay}"></input>`)
-        $("#animDelay").onchange = function () {
-            Settings.list.animationDelay = $("#animDelay").val()
+
+        Object.entries(options).forEach(([id, opt]) => {
+            if (Settings._getStorage(id) && opt.default) $("#" + id).click()
+        })
+
+        $("#AnimationDelay").append(`
+            Animation Delay: <span id="anim_delay_txt">${Settings.list.animationDelay}</span>
+            <input oninput="$('#anim_delay_txt').text(this.value)" id="range-slider__range" style="width:100%" type="range" min="40" max="240" step="10" value="${Settings.list.animationDelay}">
+        `).on("change", "#range-slider__range", function () {
+            Settings.list.animationDelay = $(this).val()
             Settings._setStorage("animDelay", Settings.list.animationDelay)
-        }
-    
-        $("#HatsCell").append(`Hats Opacity: <span id="hats_txt">${Settings.list.hatOpcity}</span></div><input oninput="$('#hats_txt').text(this.value)" id="range-slider__range" style="width:100%" type="range" id="HatsOpacty" name="HatsOpacty" min="0.5" max="1" step="0.05" value="${Settings.list.hatOpcity}"></input>`)
-        $("#HatsOpacty").onchange = function () {
-            Settings.list.hatOpcity = $("#HatsOpacty").val()
+        })
+
+        /**$("#HatsCell").append(`
+            Hats Opacity: <span id="hats_txt">${Settings.list.hatOpcity}</span>
+            <input oninput="$('#hats_txt').text(this.value)" id="range-slider__range" style="width:100%" type="range" min="0.5" max="1" step="0.05" value="${Settings.list.hatOpcity}">
+        `).on("change", "#range-slider__range", function () {
+            Settings.list.hatOpcity = $(this).val()
             Settings._setStorage("HatsOpacty", Settings.list.hatOpcity)
-        }
+        })*/
     }
 
     static restoreSetting() {
-        if (Settings._getStorage("animDelay")) {
-            Settings.list.animationDelay = Settings._getStorage("animDelay")
-            $("#animDelay").val(Settings.list.animationDelay)
-            $("#anim_delay_txt").text(Settings.list.animationDelay)
+        const restore = (key, prop, elmId) => {
+            const value = Settings._getStorage(key)
+            if (value) {
+                Settings.list[prop] = value
+                $(`#${elmId}`).val(value)
+                $(`#${elmId}_txt`).text(value)
+            }
         }
-        if (Settings._getStorage("HatsOpacty")) {
-            Settings.list.hatOpcity = Settings._getStorage("HatsOpacty")
-            $("#HatsOpacty").val(Settings.list.hatOpcity)
-            $("#hats_txt").text(Settings.list.hatOpcity)
-        }
-    
+
+        restore("animDelay", "animationDelay", "animDelay")
+        restore("HatsOpacty", "hatOpcity", "HatsOpacty")
+
         if (Settings._getStorage("hotkeyMapping")) {
             Keysbind.hotkeyMapping = JSON.parse(Settings._getStorage("hotkeyMapping"))
         } else {
-            for (const unlock in Keysbind.hotkeyConfig) {
-                if (Keysbind.hotkeyConfig[unlock].defaultHotkey && Keysbind.hotkeyConfig[unlock].defaultHotkey !== "") {
-                    Keysbind.hotkeyMapping[Keysbind.hotkeyConfig[unlock].defaultHotkey] = unlock
-                }
-            }
+            Object.entries(Keysbind.hotkeyConfig).forEach(([key, config]) => {
+                if (config.defaultHotkey) Keysbind.hotkeyMapping[config.defaultHotkey] = key
+            })
             Settings._setStorage("hotkeyMapping", Keysbind.hotkeyMapping)
         }
     }
-    
 }

@@ -1,7 +1,8 @@
 import { Container, TilingSprite, utils, Graphics } from 'pixi.js'
-import { Mergez } from '..'
-export class drawMap {
-    static border = Object.create({
+import { Minimap } from './Minimap'
+
+export class Mapp {
+    static border = {
         left: -2000,
         right: 2000,
         top: -2000,
@@ -10,12 +11,13 @@ export class drawMap {
         height: 4000,
         centerX: -1,
         centerY: -1
-    })
+    }
+
     constructor(game) {
         this.game = game
         this.container = new Container()
-        this.width = drawMap.border.width
-        this.height = drawMap.border.height
+        this.width = Mapp.border.width
+        this.height = Mapp.border.height
 
         this.background = new TilingSprite(utils.TextureCache['Grid'], this.width, this.height)
         this.background.anchor.set(0.5)
@@ -25,16 +27,12 @@ export class drawMap {
             .lineStyle(50, 0xf7f7f7)
             .drawRect(-this.width / 2, -this.height / 2, this.width, this.height)
 
-        this.initialize()
-    }
-    initialize() {
-        if (drawMap.border.centerX !== 0 || drawMap.border.centerY !== 0) return
         this.container.addChild(this.background)
         this.container.addChild(this.borderGraphics)
-        Mergez.bgContainer.addChild(this.container)
+        Minimap.bgContainer.addChild(this.container)
     }
+    
     redraw() {
-        if (drawMap.border.centerX !== 0 || drawMap.border.centerY !== 0) return
-        this.container.destroy()
+        this.container.destroy({ children: true })
     }
 }

@@ -8,7 +8,7 @@ import Settings from '../../Core/Settings'
 import Writer from '../../Core/Network/Writer'
 import Network from '../../Core/Network'
 
-import Functions from '../../Core/Game/Functions'
+import Utils from '../../Core/Utils'
 import noSkin from '../../../img/noskin.png'
 
 export function MainPanel() {
@@ -30,13 +30,13 @@ export function MainPanel() {
             skin: Settings.list.skin_url
         }
         sendPlay(rawName)
-        Functions.hideESCOverlay()
+        Utils.hideESCOverlay()
 
     }
     
     function setSpectate() {
         Network.wsSend(Network.UINT8_CACHE[1])
-        Functions.hideESCOverlay()
+        Utils.hideESCOverlay()
     }
 
     const ShowKeySettings = () => {

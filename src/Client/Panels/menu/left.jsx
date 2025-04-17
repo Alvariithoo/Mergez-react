@@ -1,11 +1,12 @@
 import React from 'react'
-import $ from 'jquery'
+//import $ from 'jquery'
 import 'material-icons/iconfont/material-icons.css'
 
 export function Left() {
 
     const showHats = () => {
-        $('#hatsPanel-bg').show()
+        return
+        //$('#hatsPanel-bg').show()
     }
 
     return (

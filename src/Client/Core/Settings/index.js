@@ -1,7 +1,9 @@
+import $ from 'jquery'
 import Logger from '../Network/Logger'
-import Functions from '../Game/Functions'
+import Utils from '../Utils'
 import Keybind from './Hotkeys'
 import { SetOptions } from './SetOptions'
+import { Camera } from '../Player/Camera'
 
 class Settings {
     static list = {
@@ -30,7 +32,29 @@ class Settings {
         mouseX: NaN,
         mouseY: NaN
     }
-    
+
+    static init() {
+        Settings.afterGameLogicLoaded()
+        Settings.loadSettings()
+
+        window.addEventListener('beforeunload', Settings.storeSettings)
+        document.addEventListener('wheel', (event) => {
+            Camera.handleScroll(event)
+        }, { passive: true })
+
+        window.onkeydown = (event) => {
+            Keybind.keydown(event)
+        }
+        window.onkeyup = (event) => {
+            Keybind.keyup(event)
+        }
+
+        $("#overlays2").on("mousemove", (event) => {
+            Settings.ingame.mouseX = event.clientX
+            Settings.ingame.mouseY = event.clientY
+        })
+    }
+
     static initSetting(id, elm) {
         function simpleAssignListen(id, elm, prop) {
             if (Settings.list[id] !== '') elm[prop] = Settings.list[id]
@@ -64,7 +88,7 @@ class Settings {
         const text = localStorage.getItem('Options')
         const obj = text ? JSON.parse(text) : Settings.list
         for (const prop in Settings.list) {
-            const elm = Functions.byId(prop.charAt(0) === '_' ? prop.slice(1) : prop)
+            const elm = Utils.byId(prop.charAt(0) === '_' ? prop.slice(1) : prop)
             if (elm) {
                 if (Object.hasOwnProperty.call(obj, prop)) Settings.list[prop] = obj[prop]
                 this.initSetting(prop, elm)

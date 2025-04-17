@@ -15,18 +15,21 @@ export class Stats {
 
     static drawStats() {
         const $stats = $("#div_score")
-        const string = []
+        const statsData = []
+
         if (Stats.get.score > 0) {
-            string.push(`Score: ${Stats.get.score.toLocaleString()}`)
+            statsData.push(`Score: ${Stats.get.score.toLocaleString()}`)
         }
         if (Stats.get.fps > 0 && Settings.list.showFPS) {
-            string.push(`FPS: ${~~Stats.get.fps}`)
+            statsData.push(`FPS: ${Math.floor(Stats.get.fps)}`)
         }
-        if (string.length > 0) {
-            $stats.show().html(string.join("&nbsp&nbsp&nbsp").trim())
+
+        if (statsData.length > 0) {
+            $stats.show().html(statsData.join("&nbsp;&nbsp;&nbsp;"))
         } else {
             $stats.hide()
         }
-        setTimeout(Stats.drawStats, 500)
+
+        setTimeout(() => Stats.drawStats(), 500)
     }
 }

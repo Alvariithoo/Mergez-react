@@ -1,20 +1,19 @@
 import $ from 'jquery'
 import Logger from '../Network/Logger'
 import Settings from '../Settings'
-import Functions from './Functions'
 import Network from '../Network'
 
 export const wager = () => {
     $('#wagerPanel-bg').show()
     $('#wagerMain').hide()
     $('.wagerLoading').show()
-    Settings.list.wagerWs = new Network('ws://localhost:9000')
+    Settings.list.wagerWs = new WebSocket('ws://localhost:9000')
 
     Settings.list.wagerWs.onopen = () => {
         $('.wagerLoading').hide()
         $('#wagerMain').show()
         Network.wsCleanup()
-        Settings.list.wagerWs.sendData({ type: 'nickname', nickname: $('#username').text() || "Guest" })
+        Settings.list.wagerWs.sendData({ type: 'nickname', nickname: Settings.list.nick || "Guest" })
     }
 
     Settings.list.wagerWs.onclose = () => {
@@ -30,8 +29,8 @@ export const wager = () => {
                 const chatItem = document.createElement('div')
                 chatItem.className = 'wagerChatItem'
                 chatItem.innerHTML = `
-                    <span class="sender" style="color:${data.color}">${Functions.escapeHtml(data.sender)}:</span>
-                    <span class="message">${Functions.escapeHtml(data.message)}</span>
+                    <span class="sender" style="color:${data.color}">${Network.escapeHtml(data.sender)}:</span>
+                    <span class="message">${Network.escapeHtml(data.message)}</span>
                 `
                 $('#wagerChatMessages').append(chatItem)
                 break
@@ -122,4 +121,8 @@ export async function wagerStart(address) {
     Network.wsInit(address)
     $('#wagerPanel-bg').hide()
     $('#wagerRoom-bg').hide()
+    setTimeout (() => {
+        $('#play').click()
+    }, 1000)
+    
 }
