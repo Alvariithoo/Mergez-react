@@ -1,70 +1,28 @@
-# Getting Started with Create React App
+# Mergez  
+Protocol 6 Agar.io client for private servers
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### Getting support | Discord server
+If you need extra help with anything you should ask it in the [Agar.io Private Servers Discord](https://discord.gg/CfvdZZrCKE) and not in issues.
 
-## Available Scripts
+### Why Mergez?
+This is the source code of Mergez that was firstly inspired in private server with customs modes, then based in my first version of  [Cigar2](https://github.com/Alvariithoo/Cigar2) using webgl with [PixiJS](https://pixijs.com/) later moving to [React](https://react.dev/) with multiple files and modular like LituDev's version of [Cigar3](https://github.com/LituDev/Cigar3)
 
-In the project directory, you can run:
+### Recommended servers only
+MultiOgarII not tested may be not compatible
+- [Ultra](https://github.com/Alvariithoo/Mergez/tree/master)
+- [Wager](https://github.com/Alvariithoo/Mergez/tree/wager)
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `npm test`
+### Credits
+- [Original Cigar2](https://github.com/Cigar2/Cigar2)
+- [LituDev's Cigar3](https://github.com/LituDev/Cigar3)
+- [xAzz's UI-Client](https://github.com/xAzz/UI-Client)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Uploading skins
+Upload your **PNG** files to the skins folder and run the updateSkinList file in the root directory, you can also do it manually by putting the skin names in `public/skinList.txt` separated by commas (no file extension).
 
-### `npm run build`
+### Getting started
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Clone this repository using Git, and then `cd Mergez`, `npm i`, and `npm start`. Mergez will then start on `localhost:3000`.
