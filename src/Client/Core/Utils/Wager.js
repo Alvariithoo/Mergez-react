@@ -33,6 +33,7 @@ export const wager = () => {
                     <span class="message">${Network.escapeHtml(data.message)}</span>
                 `
                 $('#wagerChatMessages').append(chatItem)
+                sendChat()
                 break
             }
             case "update": {
@@ -124,5 +125,20 @@ export async function wagerStart(address) {
     setTimeout (() => {
         $('#play').click()
     }, 1000)
-    
+}
+
+export function sendChat() {
+    $('#wagerChatInput').off('keypress').on('keypress', (event) => {
+        if (event.key === 'Enter') {
+            const message = $('#wagerChatInput').val().trim()
+            if (message) {
+                Settings.list.wagerWs.sendData({
+                    type: "message",
+                    message: message,
+                    sender: Settings.list.nick || "Guest",
+                })
+                $('#wagerChatInput').val('')
+            }
+        }
+    })
 }
